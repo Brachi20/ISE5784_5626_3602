@@ -51,7 +51,7 @@ public class Vector extends Point {
      * @return The resulting vector.
      */
     public Vector add(Vector vecToAdd) {
-        return new Vector(super.add(vecToAdd));
+        return new Vector(super.add(vecToAdd).xyz);
     }
 
     /**
