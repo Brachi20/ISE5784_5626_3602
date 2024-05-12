@@ -16,7 +16,7 @@ public class Point {
      * @param d2 The Y coordinate
      * @param d3 The Z coordinate
      */
-    public Point(Double d1, Double d2, Double d3) {
+    public Point(double d1, double d2, double d3) {
         this.xyz = new Double3(d1, d2, d3);
     }
 
@@ -65,4 +65,12 @@ public class Point {
     public double distance(Point p) {
         return Math.sqrt(this.distanceSquared(p));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        return (obj instanceof Point other)
+                && this.xyz.equals(other.xyz);
+    }
+
 }
