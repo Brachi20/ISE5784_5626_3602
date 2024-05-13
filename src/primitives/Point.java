@@ -73,4 +73,9 @@ public class Point {
                 && this.xyz.equals(other.xyz);
     }
 
+    @Override
+    public String toString() {
+       return xyz.toString();
+    }
+
 }
