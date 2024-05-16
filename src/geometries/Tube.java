@@ -7,7 +7,7 @@ import primitives.Ray;
  * Represents an abstract tube in 3D space.
  * A tube is defined by its axis, a line in 3D space, and a radius.
  */
-public abstract class Tube extends RadialGeometry {
+public abstract class  Tube extends RadialGeometry {
 
     /**
      * The axis of the tube, represented by a {@link Ray}.

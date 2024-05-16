@@ -51,6 +51,8 @@ public class Vector extends Point {
      * @return The resulting vector.
      */
     public Vector add(Vector vecToAdd) {
+        if(Double3.ZERO.equals(super.add(vecToAdd).xyz))
+            throw new IllegalArgumentException("ERROR:cant add vector with its negative vector");
         return new Vector(super.add(vecToAdd).xyz);
     }
 
