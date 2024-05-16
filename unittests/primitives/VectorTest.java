@@ -50,7 +50,8 @@ class VectorTest {
         Vector vr = v1.crossProduct(v2);
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken
         // for simplicity)
-        assertEquals(v1.length() * v2.length(), vr.length(), 0.0001, "crossProduct() wrong result length");
+        assertEquals(v1.length() * v2.length(), vr.length(), 0.0001,
+                "crossProduct() wrong result length");
         // TC02: Test cross-product result orthogonality to its operands
         assertEquals(0, vr.dotProduct(v1), "crossProduct() result is not orthogonal to 1st operand");
         assertEquals(0, vr.dotProduct(v2), "crossProduct() result is not orthogonal to 2nd operand");
