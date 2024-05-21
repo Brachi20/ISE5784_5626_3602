@@ -31,4 +31,10 @@ public abstract class Sphere extends RadialGeometry {
     public Vector getNormal() {
         return null; // Not implemented in abstract class, should be implemented in subclasses
     }
+   //TODO:fix
+    public Vector getNormal(Point p) {
+        if(p.equals(center))
+            throw new IllegalArgumentException("The point is the center of the sphere");
+        // Not implemented in abstract class, should be implemented in subclasses
+    }
 }

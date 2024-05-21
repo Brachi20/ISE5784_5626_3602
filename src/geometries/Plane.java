@@ -17,6 +17,7 @@ public class Plane implements Geometry {
      * @param p2 The second point.
      * @param p3 The third point.
      */
+    //TODO:fix
     public Plane(Point p1, Point p2, Point p3) {
         normal = null; // Placeholder value
         q = p1; // Assigning one of the points to q, assuming it's a point on the plane

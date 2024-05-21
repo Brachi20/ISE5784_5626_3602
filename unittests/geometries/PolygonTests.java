@@ -1,16 +1,14 @@
 package geometries;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
 import geometries.Polygon;
 import primitives.Point;
 import primitives.Vector;
 
 /**
  * Testing Polygons
- * @author Dan
+ * @author Dan Zilberstein
  */
 public class PolygonTests {
    /**
