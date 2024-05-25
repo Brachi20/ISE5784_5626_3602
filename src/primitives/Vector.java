@@ -1,4 +1,5 @@
 package primitives;
+import static primitives.Util.isZero;
 
 /**
  * The class represents a vector which is a fundamental object in 3D geometry, with direction and size,

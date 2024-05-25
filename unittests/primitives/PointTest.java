@@ -1,5 +1,5 @@
 package primitives;
-/**
+/*
  * * Unit tests for primitives.Point class
  * * @author Hen Elkayam ,Barchi Tarkieltaub
  */
@@ -28,9 +28,12 @@ public class PointTest {
         assertThrows(IllegalArgumentException.class, () -> v1.subtract(v1),
                 "subtract() Point - itself does not throw an exception ");
         // TC12: test wrong exception from subtract of two different points
-        assertThrows(Exception.class, () -> v1.subtract(v2),
+        assertThrows(Exception.class, () -> v1.subtract(v1),
                 "subtract() Point - Point throw wrong exception");
+
     }
+
+
 
     /**
      * Test method for {@link primitives.Point add(primitives.Point)}.
@@ -39,7 +42,7 @@ public class PointTest {
     void testAdd() {
         Vector v1=new Vector(1,2,3);
         Point p1=new Point(4d,5d,2d);
-        Point p2=new Vector(-1,-2,-3);
+        Point p2=new Point(-1,-2,-3);
         // ============ Equivalence Partitions Tests ==============
         // TC01: test result of add vector to point
         assertEquals(new Point(5d,7d,5d),p1.add(v1),
