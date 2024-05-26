@@ -12,6 +12,18 @@ public class PointTest {
 
     /**
      * Test method for
+     * {@link primitives.Point# costructor()}
+     */
+    @Test
+    public void testConstructor(){
+        Point p=new Point(1,2,3);
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: test building some point
+        assertNotNull(p,"Failed constructing a point");
+    }
+    /**
+     * Test method for
      * {@link primitives.Point#subtract(Point)}
      */
     @Test

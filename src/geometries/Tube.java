@@ -3,6 +3,7 @@
 
 package geometries;
 
+import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
 
@@ -10,7 +11,7 @@ import primitives.Ray;
  * Represents an abstract tube in 3D space.
  * A tube is defined by its axis, a line in 3D space, and a radius.
  */
-public abstract class  Tube extends RadialGeometry {
+public class Tube extends RadialGeometry {
 
     /**
      * The axis of the tube, represented by a {@link Ray}.
@@ -20,7 +21,7 @@ public abstract class  Tube extends RadialGeometry {
     /**
      * Constructs a Tube object with a given axis and radius.
      *
-     * @param axis The axis of the tube, represented by a {@link Ray}.
+     * @param axis   The axis of the tube, represented by a {@link Ray}.
      * @param radius The radius of the tube.
      */
     public Tube(Ray axis, Double radius) {
@@ -36,7 +37,9 @@ public abstract class  Tube extends RadialGeometry {
      *
      * @return The normal vector to the tube.
      */
-    public Vector getNormal() {
-        return null; // Not implemented in abstract class, should be implemented in subclasses
+
+    @Override
+    public Vector getNormal(Point p) {
+        return null;
     }
 }

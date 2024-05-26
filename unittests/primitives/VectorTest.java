@@ -31,7 +31,7 @@ class VectorTest {
      * Test method for
      * {@link primitives.Vector testScale(primitives.Vector)}.
      */
-    //TODO:ask if its ok?
+
     @Test
     void testScale() {
         Vector v1=new Vector(1,4,8);
