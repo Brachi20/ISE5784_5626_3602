@@ -12,6 +12,18 @@ public class PointTest {
 
     /**
      * Test method for
+     * {@link primitives.Point# costructor()}
+     */
+    @Test
+    public void testConstructor(){
+        Point p=new Point(1,2,3);
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: test building some point
+        assertNotNull(p,"Failed constructing a point");
+    }
+    /**
+     * Test method for
      * {@link primitives.Point#subtract(Point)}
      */
     @Test
@@ -28,9 +40,12 @@ public class PointTest {
         assertThrows(IllegalArgumentException.class, () -> v1.subtract(v1),
                 "subtract() Point - itself does not throw an exception ");
         // TC12: test wrong exception from subtract of two different points
-        assertThrows(Exception.class, () -> v1.subtract(v2),
+        assertThrows(Exception.class, () -> v1.subtract(v1),
                 "subtract() Point - Point throw wrong exception");
+
     }
+
+
 
     /**
      * Test method for {@link primitives.Point add(primitives.Point)}.

@@ -18,7 +18,10 @@ public class Plane implements Geometry {
      * @param p3 The third point.
      */
     public Plane(Point p1, Point p2, Point p3) {
-        normal = null; // Placeholder value
+        Vector v1 = p1.subtract(p2);
+        Vector v2 = p1.subtract(p3);
+        Vector n = v1.crossProduct(v2);
+        normal = n.normalize();
         q = p1; // Assigning one of the points to q, assuming it's a point on the plane
     }
 
@@ -35,7 +38,8 @@ public class Plane implements Geometry {
 
     /**
      * get method of normal filed
-     *This method implements the method in a geometric interface
+     * This method implements the method in a geometric interface
+     *
      * @return The normal vector.
      */
     public Vector getNormal() {
@@ -44,8 +48,9 @@ public class Plane implements Geometry {
 
     /**
      * Returns the normal vector of the plane at a given point (for consistency with the interface).
-     ** Returns the normal vector of the plane (this method does exactly what the getNormal method
+     * * Returns the normal vector of the plane (this method does exactly what the getNormal method
      * does, and we implemented the first one as part of the commitment to implement an interface)
+     *
      * @param p The point (ignored).
      * @return The normal vector.
      */

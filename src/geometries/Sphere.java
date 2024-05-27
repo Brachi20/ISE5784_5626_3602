@@ -6,7 +6,7 @@ import primitives.Vector;
 /**
  * Represents a sphere in 3D space.
  */
-public abstract class Sphere extends RadialGeometry {
+public class Sphere extends RadialGeometry {
 
     private final Point center;
 
@@ -30,5 +30,12 @@ public abstract class Sphere extends RadialGeometry {
      */
     public Vector getNormal() {
         return null; // Not implemented in abstract class, should be implemented in subclasses
+    }
+
+    public Vector getNormal(Point p) {
+        if (p.equals(center))
+            throw new IllegalArgumentException("The point is the center of the sphere");
+        return p.subtract(center).normalize();
+        // Not implemented in abstract class, should be implemented in subclasses
     }
 }
