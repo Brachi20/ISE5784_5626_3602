@@ -39,7 +39,7 @@ public class PointTest {
     void testAdd() {
         Vector v1=new Vector(1,2,3);
         Point p1=new Point(4d,5d,2d);
-        Point p2=new Vector(-1,-2,-3);
+        Point p2=new Point(-1,-2,-3);
         // ============ Equivalence Partitions Tests ==============
         // TC01: test result of add vector to point
         assertEquals(new Point(5d,7d,5d),p1.add(v1),
