@@ -7,6 +7,7 @@ import static primitives.Util.isZero;
  */
 public class Vector extends Point {
 
+    public static final Vector ZERO = new Vector(0d, 0d, 0d);
     /**
      * Constructs a new vector with the given coordinates.
      * @param x The x-coordinate.
@@ -49,7 +50,7 @@ public class Vector extends Point {
      * @return The resulting vector.
      */
     public Vector add(Vector vecToAdd) {
-        if (Double3.ZERO.equals(super.add(vecToAdd).xyz))
+        if (Point.ZERO.equals(super.add(vecToAdd)))
             throw new IllegalArgumentException("ERROR:cant add vector with its negative vector");
         return new Vector(super.add(vecToAdd).xyz);
     }

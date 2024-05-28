@@ -34,9 +34,11 @@ public class Point {
      * @return The vector from this point to the other point
      */
     public Vector subtract(Point p) {
-        if(Double3.ZERO.equals(xyz.subtract(p.xyz)))
-            throw new IllegalArgumentException("ERROR:cant sub struct vector and same point");
-        return new Vector(this.xyz.subtract(p.xyz));
+        Double3 d=xyz.subtract(p.xyz);
+        if(d.equals(Double3.ZERO))
+            throw new IllegalArgumentException("ERROR:cant sub struct point and same point");
+        return new Vector(d);
+
     }
 
     /**

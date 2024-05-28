@@ -30,7 +30,7 @@ class TubeTest {
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: A test for the correct calculation of the normal of a certain tube
-        assertEquals(new Point(0, -1, 0),
+        assertEquals(new Vector(0, -1, 0),
                 tTube.getNormal(p),
                 "normal of Tube is incorrect");
 

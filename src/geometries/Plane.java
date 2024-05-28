@@ -18,9 +18,13 @@ public class Plane implements Geometry {
      * @param p3 The third point.
      */
     public Plane(Point p1, Point p2, Point p3) {
+        if(p1==p2||p1==p3||p2==p3)
+            throw new IllegalArgumentException("ERROR:There is coalesce points");
         Vector v1 = p1.subtract(p2);
         Vector v2 = p1.subtract(p3);
         Vector n = v1.crossProduct(v2);
+        if(n.equals(Vector.ZERO))
+            throw new IllegalArgumentException("ERROR:the points are on the same line");
         normal = n.normalize();
         q = p1; // Assigning one of the points to q, assuming it's a point on the plane
     }
