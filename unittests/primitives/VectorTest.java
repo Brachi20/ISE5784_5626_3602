@@ -12,19 +12,18 @@ class VectorTest {
      */
     @Test
     void testAdd() {
-        // =============== Boundary Values Tests ==================
-        Vector v1 = new Vector(4, 2, 0);
+
+        // ============ Equivalence Partitions Tests ==============
+        //TC01:test calculate add two point
         Vector v2 = new Vector(-4, -2, 0);
         Vector v3 = new Vector(2, 3, 5);
+        assertEquals(new Vector(-2, 1, 5), v2.add(v3), "add(): does not work correctly");
+
+        // =============== Boundary Values Tests ==================
+        Vector v1 = new Vector(4, 2, 0);
         // TC11: test zero vector from add of Equal and opposite vectors
         assertThrows(IllegalArgumentException.class, () -> v1.add(v2),
                 "add(): Vector + -itself does not throw an exception");
-        // ============ Equivalence Partitions Tests ==============
-        // TC12: test f
-        assertEquals(new Vector(-2, 1, 5), v2.add(v3), "add(): does not work correctly");
-        assertThrows(Exception.class, () -> v1.add(v3),
-                "add(): Vector + Vector throws wrong exception");
-
 
     }
     /**

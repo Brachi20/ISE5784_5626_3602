@@ -32,6 +32,12 @@ public class Cylinder extends Tube {
      * @return Returns null since the cylinder is an infinite surface.
      */
     public Vector getNormal(Point p) {
-        return null;
+        if(p.equals(axis.getHead()) || p.subtract(axis.getHead()).dotProduct(axis.getDirection())==0)
+            return axis.getDirection();
+        else
+        {
+            return super.getNormal(p);
+        }
+
     }
 }

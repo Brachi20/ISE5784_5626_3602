@@ -80,4 +80,12 @@ public class Point {
        return xyz.toString();
     }
 
+    /**
+     * get method for coordinates of point
+     * @return Double3 that contains three coordinate of point
+     */
+    public Double3 getXYZ(){
+        return xyz;
+    }
+
 }

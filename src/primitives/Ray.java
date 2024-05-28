@@ -34,4 +34,20 @@ public class Ray {
                 ", direction=" + direction +
                 '}';
     }
+
+    /**
+     * get method for head point of Ray
+     * @return point of ray's head
+     */
+    public Point getHead(){
+        return head;
+    }
+
+    /**
+     * get method for vector direction of Ray
+     * @return vector of ray's direction
+     */
+    public Vector getDirection(){
+        return direction;
+    }
 }

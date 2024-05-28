@@ -36,10 +36,9 @@ class TubeTest {
 
         // =============== Boundary Values Tests ==================
 
-        //TC11: Test for a case where the vector (P2-O) is perpendicular to the ray
-        assertThrows(IllegalArgumentException.class,
-                () -> tTube.getNormal(new Point(0, 3, 4)),
-                "case:The Vector (p-p0) is orthogonal to vector direction of ray's tube does not throw an exception");
+        //TC11: Test for a case where the vector (P-O) is perpendicular to the ray
+        assertEquals(new Vector(0,1,0),tTube.getNormal(new Point(0,4,0)),
+                "incorrect calculating normal on case:The Vector (p-p0) is orthogonal to vector direction of ray's tube ");
 
     }
 
