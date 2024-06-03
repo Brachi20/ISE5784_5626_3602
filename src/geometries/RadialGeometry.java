@@ -4,6 +4,7 @@ package geometries;
  * This is a class that implements the Geometric interface and has only a radius field
  */
 public abstract class RadialGeometry implements Geometry {
+    //List<Point> findIntersections(Ray ray);
     final protected double radius;
 
     /**

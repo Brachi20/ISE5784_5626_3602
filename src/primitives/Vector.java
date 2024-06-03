@@ -7,7 +7,6 @@ import static primitives.Util.isZero;
  */
 public class Vector extends Point {
 
-    public static final Vector ZERO = new Vector(0d, 0d, 0d);
     /**
      * Constructs a new vector with the given coordinates.
      * @param x The x-coordinate.

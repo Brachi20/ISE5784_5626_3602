@@ -4,11 +4,14 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * Represents a cylinder in 3D space, extending from a base {@link Tube} with a certain height.
  */
 public class Cylinder extends Tube {
 
+    //List<Point> findIntersections(Ray ray);
     private final Double height;
 
     /**

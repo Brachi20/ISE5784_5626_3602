@@ -12,7 +12,7 @@ import primitives.Ray;
  * A tube is defined by its axis, a line in 3D space, and a radius.
  */
 public class Tube extends RadialGeometry {
-
+    //List<Point> findIntersections(Ray ray);
     /**
      * The axis of the tube, represented by a {@link Ray}.
      */

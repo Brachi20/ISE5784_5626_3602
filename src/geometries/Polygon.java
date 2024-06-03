@@ -5,6 +5,7 @@ import java.util.List;
 import static primitives.Util.isZero;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 /**
@@ -13,6 +14,7 @@ import primitives.Vector;
  * @author Dan
  */
 public class Polygon implements Geometry {
+   //List<Point> findIntersections(Ray ray);
    /** List of polygon's vertices */
    protected final List<Point> vertices;
    /** Associated plane in which the polygon lays */
