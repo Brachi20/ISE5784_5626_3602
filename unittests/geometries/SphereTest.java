@@ -61,6 +61,7 @@ class SphereTest {
         assertEquals(2, result1.size(), "Wrong number of points");
         assertEquals(exp, result1, "Ray crosses sphere");
         // TC03: Ray starts inside the sphere (1 point)
+        assertEquals(1, result1.size(), "Wrong number of points");
         // TC04: Ray starts after the sphere (0 points)
         // =============== Boundary Values Tests ==================
         // **** Group: Ray's line crosses the sphere (but not the center)

@@ -12,12 +12,12 @@ public class Geometries implements Intersectable {
 
     public Geometries(){};
 
-    public Geometries(List<Intersectable> g){
-        add(g);
+    public Geometries(Intersectable... geometries){
+        add(geometries);
     }
-    public void add(List<Intersectable> g){
-        if(!geometries.isEmpty())
-            geometries.addAll(g);
+    public void add(Intersectable... geometries){
+        if(geometries!= null)
+            this.geometries.addAll(List.of(geometries));
     }
     @Override
     public List<Point> findIntersections(Ray ray) {

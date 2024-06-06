@@ -82,7 +82,7 @@ class PlaneTest {
                 "calculate intersections between a plane and a ray that parallel to the plane and start on it " +
                         "should not have to return intersection point");
 
-        //TC14:Calculate intersection points between plane and ray that parallel to the plane and before the plane
+        //TC14:Calculate intersection points between plane and ray that vertical to the plane and before the plane
         assertEquals(1,p.findIntersections(r6).size(),
                 "calculate intersections between a plane and a ray that parallel to the plane and start before it " +
                         "should return one intersection point");
@@ -103,8 +103,5 @@ class PlaneTest {
         assertEquals(0,p2.findIntersections(r9).size(),
                 "Calculating a cut with a non-perpendicular and non-parallel ray starting at the " +
                         "plane should not have returned points");
-
-
-
     }
 }

@@ -6,16 +6,17 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * This is a class that represents a plane. It implements the geometry class
  */
 public class Plane implements Geometry {
-    public List<Point> findIntersections(Ray ray){
-        return null;
-    }
+
+
     private final Point q;
     private final Vector normal;
-
     /**
      * Constructs a new plane passing through three points.
      *
@@ -66,5 +67,26 @@ public class Plane implements Geometry {
      */
     public Vector getNormal(Point p) {
         return normal;
+    }
+
+    /**
+     * Finds the intersection points between the given ray and the plane.
+     *
+     * @param ray The ray to find intersections with.
+     * @return A list containing the intersection point, or null if there is no intersection.
+     */
+    public List<Point> findIntersections(Ray ray){
+        //calculate the t value for the distance between the head of the ray and the point of intersection
+        double nv=ray.getDirection().dotProduct(normal);
+        //if the ray is parallel to the plane
+        if(isZero(nv))
+            return null;
+        double t = alignZero((q.subtract(ray.getHead())).dotProduct(normal) /nv) ;
+        // if the head of the ray is on the plane or the ray is on the other direction of the plane
+        if(t<=0)
+            return null;
+        //calculate the point of intersection
+        Point p = ray.getHead().add(ray.getDirection().scale(t));
+        return List.of(p);
     }
 }
