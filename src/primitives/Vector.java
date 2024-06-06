@@ -115,4 +115,12 @@ public class Vector extends Point {
         return this.scale(1d/length());
     }
 
+    public boolean isParallel(Vector vAxis) {
+        if(xyz.d2 * vAxis.xyz.d3 - xyz.d3 * vAxis.xyz.d2==0&&
+                xyz.d3 * vAxis.xyz.d1 - xyz.d1 * vAxis.xyz.d3==0&&
+                xyz.d1 * vAxis.xyz.d2 - xyz.d2 * vAxis.xyz.d1==0)
+            return true;
+        return  false;
+
+    }
 }

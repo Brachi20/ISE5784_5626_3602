@@ -7,12 +7,16 @@ import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
 
+import java.util.List;
+
 /**
  * Represents an abstract tube in 3D space.
  * A tube is defined by its axis, a line in 3D space, and a radius.
  */
 public class Tube extends RadialGeometry {
-    //List<Point> findIntersections(Ray ray);
+    public List<Point> findIntersections(Ray ray){
+        return null;
+    };
     /**
      * The axis of the tube, represented by a {@link Ray}.
      */
