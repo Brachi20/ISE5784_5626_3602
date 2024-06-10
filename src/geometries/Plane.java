@@ -81,9 +81,16 @@ public class Plane implements Geometry {
         //if the ray is parallel to the plane
         if(isZero(nv))
             return null;
-        double t = alignZero((q.subtract(ray.getHead())).dotProduct(normal) /nv) ;
-        // if the head of the ray is on the plane or the ray is on the other direction of the plane
-        if(t<=0)
+
+        //if the head of the ray is on the plane
+        if(this.q.equals(ray.getHead()))
+            return null;
+        double t =normal.dotProduct(this.q.subtract(ray.getHead())) / nv;
+        //if the ray is on the plane
+        if(alignZero(t)==0)
+            return null;
+        // if the ray is on the other direction of the plane
+        if(t<0)
             return null;
         //calculate the point of intersection
         Point p = ray.getHead().add(ray.getDirection().scale(t));

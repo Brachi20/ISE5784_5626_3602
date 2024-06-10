@@ -121,6 +121,5 @@ public class Vector extends Point {
                 xyz.d1 * vAxis.xyz.d2 - xyz.d2 * vAxis.xyz.d1==0)
             return true;
         return  false;
-
     }
 }
