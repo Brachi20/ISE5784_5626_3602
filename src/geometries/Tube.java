@@ -50,7 +50,7 @@ public class Tube extends RadialGeometry {
             return p.subtract(p0).normalize();
         else {
             double t=v.dotProduct(p.subtract(p0));
-            Point o=p0.add(v.scale(t));
+            Point o=axis.getPoint(t);
             return p.subtract(o).normalize();
         }
 
