@@ -102,9 +102,13 @@ public class Polygon implements Geometry {
         Vector v1=vertices.get(0).subtract(start);
         Vector v2=vertices.get(1).subtract(start);
         double t=direction.dotProduct(v1.crossProduct(v2).normalize());
+        if(t==0)
+            return null;
         for(int i=1;i<size;i++){
             v1=vertices.get(i).subtract(start);
             v2=vertices.get((i+1)%size).subtract(start);
+            if(direction.dotProduct(v1.crossProduct(v2).normalize())==0)
+                return null;
             if(t*direction.dotProduct(v1.crossProduct(v2).normalize())<0)
                 return null;
         }

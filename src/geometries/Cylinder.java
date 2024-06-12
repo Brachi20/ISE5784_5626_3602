@@ -63,6 +63,7 @@ public class Cylinder extends Tube {
             return intersections;
         }
 
+
         // Find intersections with the bottom and top bases of the cylinder
         List<Point> bottomBaseIntersections = findBaseIntersections(ray, axis.getHead());
         if (bottomBaseIntersections != null) {
@@ -157,6 +158,10 @@ public class Cylinder extends Tube {
 
     private List<Point> findBaseIntersections(Ray ray, Point center) {
         Vector vAxis = axis.getDirection();
+        Vector v = ray.getDirection();
+        if(vAxis.isParallel(v))
+            if(ray.getHead().getX()>=(center.getX()+radius))
+                return null;
         Plane basePlane = new Plane(center, vAxis);
 
         List<Point> baseIntersections = basePlane.findIntersections(ray);

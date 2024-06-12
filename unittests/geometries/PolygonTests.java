@@ -3,10 +3,12 @@ package geometries;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import geometries.Polygon;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Testing Polygons
@@ -14,6 +16,13 @@ import primitives.Vector;
  * @author Dan Zilberstein
  */
 public class PolygonTests {
+
+
+    private final Point p000 = new Point(0, 0, 0);
+    private final Point p100 = new Point(1, 0, 0);
+    private final Point p010 = new Point(0, 1, 0);
+    private final Point p001 = new Point(0, 0, 1);
+
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals
@@ -25,48 +34,54 @@ public class PolygonTests {
      */
     @Test
     public void testConstructor() {
+
+        final Point p1 = new Point(-1, 1, 1);
+        final Point p03 = new Point(0, 2, 2);
+        final Point p04= new Point(0.5, 0.25, 0.5);
+        final Point p11 = new Point(0, 0.5, 0.5);
+
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: Correct concave quadrangular with vertices in correct order
-        assertDoesNotThrow(() -> new Polygon(new Point(0, 0, 1),
-                        new Point(1, 0, 0),
-                        new Point(0, 1, 0),
-                        new Point(-1, 1, 1)),
+        assertDoesNotThrow(() -> new Polygon(p001,
+                        p100,
+                        p010,
+                        p1),
                 "Failed constructing a correct polygon");
 
         // TC02: Wrong vertices order
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0), new Point(-1, 1, 1)), //
+                () -> new Polygon(p001, p010, p100, p1), //
                 "Constructed a polygon with wrong order of vertices");
 
         // TC03: Not in the same plane
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 2, 2)), //
+                () -> new Polygon(p001, p100, p010, p03 ), //
                 "Constructed a polygon with vertices that are not in the same plane");
 
         // TC04: Concave quadrangular
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0),
-                        new Point(0.5, 0.25, 0.5)), //
+                () -> new Polygon(p001, p100, p010,
+                        p04), //
                 "Constructed a concave polygon");
 
         // =============== Boundary Values Tests ==================
 
         // TC10: Vertex on a side of a quadrangular
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0),
-                        new Point(0, 0.5, 0.5)),
-                "Constructed a polygon with vertix on a side");
+                () -> new Polygon(p001, p100, p010,
+                        p11),
+                "Constructed a polygon with vertex on a side");
 
         // TC11: Last point = first point
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1)),
-                "Constructed a polygon with vertice on a side");
+                () -> new Polygon(p001, p100, p010,p001),
+                "Constructed a polygon with vertices on a side");
 
         // TC12: Co-located points
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 1, 0)),
-                "Constructed a polygon with vertice on a side");
+                () -> new Polygon(p001, p100, p010, p010),
+                "Constructed a polygon with vertices on a side");
 
     }
 
@@ -75,17 +90,25 @@ public class PolygonTests {
      */
     @Test
     public void testGetNormal() {
+
+        final Point p01=new Point(-1, 1, 1);
+
         // ============ Equivalence Partitions Tests ==============
+
         // TC01: There is a simple single test here - using a quad
         Point[] pts =
-                {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
+                {p001, p100, p010,p01 };
         Polygon pol = new Polygon(pts);
+
         // ensure there are no exceptions
-        assertDoesNotThrow(() -> pol.getNormal(new Point(0, 0, 1)), "");
+        assertDoesNotThrow(() -> pol.getNormal(p001), "");
+
         // generate the test result
-        Vector result = pol.getNormal(new Point(0, 0, 1));
+        Vector result = pol.getNormal(p001);
+
         // ensure |result| = 1
         assertEquals(1, result.length(), DELTA, "Polygon's normal is not a unit vector");
+
         // ensure the result is orthogonal to all the edges
         for (int i = 0; i < 3; ++i)
             assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 3 : i - 1])), DELTA,
@@ -97,46 +120,54 @@ public class PolygonTests {
      */
     @Test
     void testFindIntersections() {
+
+        Polygon t1 = new Polygon(p000, p100, new Point(1,1,0), p010);
+
+        final Point gp1 = new Point(0.25, 0.5, 0);
+        final var exp= List.of(gp1);
+
+        final Point p01 = new Point(0.25, 0.5, 1);
+        final Point p02 = new Point(-1, 0.75, 1);
+        final Point p03 = new Point(1.5, 0, 1);
+        final Point p11 = new Point(0, 0.5, 1);
+        final Point p13 = new Point(0, 1.5, 1);
+
+
+        final Vector v = new Vector(0, 0, -1);
+
+
         // ============ Equivalence Partitions Tests ==============
 
-        Point p000 = new Point(0, 0, 0);
-        Point p100 = new Point(1, 0, 0);
-        Point p010 = new Point(0, 1, 0);
-        Point p001 = new Point(0, 0, 1);
-        Point p1 = new Point(0.5, -1, 0);
-        Point p2 = new Point(0.5, 0.75, 1);
-        Point p3 = new Point(1.5, 0, 1);
-        Point p4 = new Point(0.5, 0.5, 1);
-        Point p5= new Point(0, 1.5, 1);
-        Vector v = new Vector(0, 0, -1);
+        // TC01: Ray's line is inside the polygon(1 point)
+        final var result1 = t1.findIntersections(new Ray(p01, v)).stream()
+                .sorted(Comparator.comparingDouble(p -> p.distance(p01))).toList();
 
-        // TC01: Ray's line is inside the triangle(1 point)
-        Polygon t1 = new Polygon(new Point(0, 0, 0), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0.5, -1, 0));
-        assertEquals(1, t1.findIntersections(new Ray(p1, v)).size(),
-                "case: Ray's line is inside the triangle needed to find one intersection point");
+        assertEquals(1, result1.size(),
+                "Wrong number of points");
+        assertEquals(exp,result1,
+                "Ray's line cross the polygon");
 
-        // TC02: Ray's line is outside the triangle opposite the edge(0 points)
-        assertNull(t1.findIntersections(new Ray(p2, v)),
-                "case: Ray's line is outside the triangle opposite the edge " +
-                        "needed to find no intersection point");
-        // TC03: Ray's line is outside the triangle against the vertex(0 points)
-        assertNull(t1.findIntersections(new Ray(p3, v)),
-                "case: Ray's line is outside the triangle against the vertex " +
-                        "needed to find no intersection point");
+        // TC02: Ray's line is outside the polygon opposite the edge(0 points)
+        assertNull(t1.findIntersections(new Ray(p02, v)),
+                "case: Ray's line is outside the polygon");
+
+        // TC03: Ray's line is outside the polygon against the vertex(0 points)
+        assertNull(t1.findIntersections(new Ray(p03, v)),
+                "case: Ray's line is outside the polygon");
 
         // =============== Boundary Values Tests ==================
 
         // TC11: Ray's line is on the edge(0 points)
-        assertNull(t1.findIntersections(new Ray(p4, v)),
-                "case: Ray's line is on the edge needed to find no intersection point");
+        assertNull(t1.findIntersections(new Ray(p11, v)),
+                "case: Ray's line is on the edge");
 
         // TC12: Ray's line is in the vertex(0 points)
         assertNull(t1.findIntersections(new Ray(p001, v)),
-                "case: Ray's line is in the vertex needed to find no intersection point");
+                "case: Ray's line is in the vertex");
 
         // TC13: Ray's line is on the edge's continuation(0 points)
-        assertNull(t1.findIntersections(new Ray(p5, v)),
-                "case: Ray's line is on the edge's continuation needed to find no intersection point");
+        assertNull(t1.findIntersections(new Ray(p13, v)),
+                "case: Ray's line is on the edge's continuation");
 
     }
 
