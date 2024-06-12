@@ -14,6 +14,9 @@ class PlaneTest {
     Point p120 =new Point(1d,2d,0d);
     Plane p=new Plane(p050, p100, p120);
 
+    /**
+     * test method for {@link geometries.Plane #Plane(primitives.Point...)}.
+     */
     @Test
     public void testConstructor(){
 
@@ -32,6 +35,9 @@ class PlaneTest {
                 "ERROR: the points are on the same line");
     }
 
+    /**
+     * Test method for {@link geometries.Plane#getNormal(Point)}.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============

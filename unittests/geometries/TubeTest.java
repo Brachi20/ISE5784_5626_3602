@@ -41,6 +41,12 @@ class TubeTest {
                 "incorrect calculating normal on case:The Vector (p-p0) is orthogonal to vector direction of ray's tube ");
 
     }
+    @Test
+    public void testFindIntersections(){
 
+
+        // ============ Equivalence Partitions Tests ==============
+
+    }
 
 }

@@ -1,4 +1,7 @@
 package primitives;
+
+import static primitives.Util.isZero;
+
 /**
  * Class Ray is the basic class representing a fundamental object in 3D geometry, the group of points on a straight line that are on one side of a given point
  * called the head of the beam, defined by fields of point and direction
@@ -50,4 +53,16 @@ public class Ray {
     public Vector getDirection(){
         return direction;
     }
+
+    /**
+     * get point on the ray at a distance t from the head
+     * @param t distance from the head
+     * @return point on the ray at a distance t from the head
+     */
+    public Point getPoint(double t){
+        if(isZero(t))
+            return head;
+        return head.add(direction.scale(t));
+    }
+
 }
