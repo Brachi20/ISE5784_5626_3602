@@ -93,7 +93,7 @@ public class Plane implements Geometry {
         if(t<0)
             return null;
         //calculate the point of intersection
-        Point p = ray.getHead().add(ray.getDirection().scale(t));
+        Point p = ray.getPoint(t);
         return List.of(p);
     }
 }
