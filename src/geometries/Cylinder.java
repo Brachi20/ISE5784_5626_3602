@@ -144,7 +144,6 @@ public class Cylinder extends Tube {
 
     private void addValidIntersection(List<Point> intersections, Ray ray, double t, Point p1, Vector vAxis) {
         if (t > 0) {
-            //TODO: change the getHead().add(ray.getDirection().scale(t)   to getPoint(t)
             Point p = ray.getPoint(t);
             double z = alignZero(p.subtract(p1).dotProduct(vAxis));
             // The scalar product returns the charge of the vector P-P1 on the axis direction of the cylinder,

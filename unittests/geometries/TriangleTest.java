@@ -65,8 +65,5 @@ class TriangleTest {
         assertNull(t1.findIntersections(new Ray(p3, v)),
                 "case: Ray's line is on the edge's continuation");
 
-
-
-
     }
 }
