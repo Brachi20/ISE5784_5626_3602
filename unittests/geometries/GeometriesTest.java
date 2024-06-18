@@ -11,14 +11,11 @@ class GeometriesTest {
     private final Point p000= new Point(0, 0, 0);
     private final Point p100= new Point(1, 0, 0);
     private final Point p010= new Point(0, 1, 0);
-    private final Point p001= new Point(0,0, 1);
-    @Test
-    void add() {
-    }
+
+    private final Vector v001= new Vector(0, 0, 1);
 
     @Test
     void testFindIntersections() {
-        final Vector v001= new Vector(0, 0, 1);
         final Point p120=new Point(1d,2d,0d);
 
         Triangle triangle = new Triangle(p000, p100, p010);
@@ -30,11 +27,13 @@ class GeometriesTest {
         Geometries g1 = new Geometries();
 
         // ============ Equivalence Partitions Tests ==============
+
         // TC01: Some geometries have intersections
         assertEquals(2, geometries.findIntersections(new Ray(new Point(1,0,-1), v001)).size(),
                 "Wrong number of points");
 
         //============ Boundary Values Tests ==================
+
         // TC11: Empty geometries list (0 points)
         assertNull(g1.findIntersections(new Ray(new Point(1,0,-1), v001)),
                 "Empty geometries list");
