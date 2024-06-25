@@ -1,5 +1,8 @@
 package primitives;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import static primitives.Util.isZero;
 
 /**
@@ -63,6 +66,29 @@ public class Ray {
         if(isZero(t))
             return head;
         return head.add(direction.scale(t));
+    }
+
+    /**
+     * find the closest point to the head of the ray from a list of points
+     * @param points list of points
+     * @return the closest point to the head of the ray
+     */
+    public Point findClosestPoint(List<Point> points) {
+        if (points == null) {
+            return null;
+        }
+        ListIterator<Point> iter = points.listIterator();
+        Point closest = null;
+        double minDistance = Double.POSITIVE_INFINITY;
+        while (iter.hasNext()) {
+            Point current = iter.next();
+            double currentDistance = head.distance(current);
+            if (currentDistance < minDistance) {
+                minDistance = currentDistance;
+                closest = current;
+            }
+        }
+        return closest;
     }
 
 }
