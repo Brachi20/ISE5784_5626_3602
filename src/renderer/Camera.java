@@ -9,6 +9,7 @@ import java.lang.constant.Constable;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 public class Camera implements Cloneable {
 
@@ -61,16 +62,22 @@ public class Camera implements Cloneable {
     }
 
     public Ray constructRay(int nX, int nY, int j, int i) {
-        double Rx = width / nX;
-        double Ry = height / nY;
-        double Xj = (j - (nX - 1) / 2d) * Rx;
-        double Yi = -(i - (nY - 1) / 2d) * Ry;
-        Point Pij = p0.add(vTo.scale(distance));
-        if (Xj != 0)
+        double rX = width / nX;
+        double rY = height / nY;
+
+        double Xj = (j - (nX - 1) / 2d) * rX;
+        double Yi = -(i - (nY - 1) / 2d) * rY;
+
+        Point pCenter = p0.add(vTo.scale(distance));
+
+        Point Pij = pCenter;
+        if (!isZero(Xj))
             Pij = Pij.add(vRight.scale(Xj));
-        if (Yi != 0)
-            Pij = Pij.add(vUp.scale(-Yi));
+        if (!isZero(Yi))
+            Pij = Pij.add(vUp.scale(Yi));
+
         Vector Vij = Pij.subtract(p0);
+
         return new Ray(p0, Vij);
     }
 
@@ -100,9 +107,9 @@ public class Camera implements Cloneable {
     }
 
     public Camera printGrid(int interval, Color color) {
-        for (int i = 0; i < interval; i++) {
-            for (int j = 0; j < interval; j++) {
-                if (i % 50 == 0 || j % 50 == 0) {
+        for (int i = 0; i < imageWriter.getNy(); i++) {
+            for (int j = 0; j < imageWriter.getNx(); j++) {
+                if (i % interval == 0 || j % interval == 0) {
                     imageWriter.writePixel(i, j, color);
                 }
             }
@@ -119,6 +126,34 @@ public class Camera implements Cloneable {
         return this;
     }
 
+    /**
+     * Orients the camera to look at a specific point in the scene with a given up vector
+     *
+     * @param point the point to look at
+     * @param upVector the general up vector (default is usually (0, 1, 0))
+     * @return this object for chaining
+     */
+    public Camera lookAt(Point point, Vector upVector) {
+        // Calculate direction vector
+        Vector direction = point.subtract(p0).normalize();
+
+        // Normalize the up vector
+        upVector = upVector.normalize();
+
+        // Calculate right vector
+        Vector right = direction.crossProduct(upVector).normalize();
+
+        // Calculate the new up vector
+        Vector newUp = right.crossProduct(direction).normalize();
+
+        // Update the camera vectors
+        this.vTo = direction;
+        this.vRight = right;
+        this.vUp = newUp;
+
+        return this;
+    }
+
 
     /**
      * Represents a builder for the camera class.
@@ -130,6 +165,9 @@ public class Camera implements Cloneable {
 
         private final Camera camera = new Camera();
 
+        // Intermediate data fields
+        private Point lookAtPoint;
+        private Vector upVector=null;
 
         /**
          * Sets the camera's position.
@@ -150,11 +188,11 @@ public class Camera implements Cloneable {
          * @return The builder
          * @throws IllegalArgumentException if the up and to vectors are not orthogonal
          */
-        public Builder setDirection(Vector up, Vector to) {
-            if (up.dotProduct(to) != 0)
+        public Builder setDirection(Vector to, Vector up) {
+            if (!isZero(to.dotProduct(up)))
                 throw new IllegalArgumentException("ERROR:up and to are not orthogonal");
-            camera.vUp = up.normalize();
             camera.vTo = to.normalize();
+            camera.vUp = up.normalize();
             return this;
         }
 
@@ -204,6 +242,27 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the camera's look at point.
+         *
+         * @param lookAtPoint The look at point
+         * @return The builder
+         */
+        public Builder setLookAtPoint(Point lookAtPoint) {
+            this.lookAtPoint = lookAtPoint;
+            return this;
+        }
+
+        /**
+         * Sets the camera's up vector.
+         *
+         * @param upVector The up vector
+         * @return The builder
+         */
+        public Builder setUpVector(Vector upVector) {
+            this.upVector = upVector;
+            return this;
+        }
 
         /**
          * Builds the camera.
@@ -211,42 +270,45 @@ public class Camera implements Cloneable {
          * @return The camera
          */
         public Camera build() {
-
-
             if (camera.width == 0)
                 throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "width");
 
             if (camera.height == 0)
                 throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "height");
 
-            if (camera.distance == 0)
+            if (isZero(camera.distance))
                 throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "distance");
-
-            if (camera.p0 == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "location");
-
-            if (camera.vUp == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "up vector");
-
-            if (camera.vTo == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "to vector");
-
-            if (camera.vRight == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "right vector");
-
-            if (camera.vUp.dotProduct(camera.vTo) != 0)
-                throw new IllegalArgumentException("ERROR:up and to are not orthogonal");
-
-            if (camera.imageWriter == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "image writer");
-
-            if (camera.rayTracer == null)
-                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "ray tracer");
 
             if (camera.distance < 0)
                 throw new IllegalArgumentException("ERROR:distance must be positive");
 
-            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            if (camera.p0 == null)
+                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "location");
+
+            if (lookAtPoint != null && upVector != null) {
+                // Update the camera vectors based on lookAtPoint and upVector
+                camera.lookAt(lookAtPoint, upVector);
+            } else {
+                if (camera.vUp == null)
+                    throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "up vector");
+
+                if (camera.vTo == null)
+                    throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "to vector");
+
+                if (camera.vUp.dotProduct(camera.vTo) != 0)
+                    throw new IllegalArgumentException("ERROR:up and to are not orthogonal");
+
+                camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+
+                if (camera.vRight == null)
+                    throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "right vector");
+            }
+
+//            if (camera.imageWriter == null)
+//                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "image writer");
+
+//            if (camera.rayTracer == null)
+//                throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "ray tracer");
 
 
             try {
