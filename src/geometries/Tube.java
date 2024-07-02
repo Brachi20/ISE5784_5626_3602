@@ -14,9 +14,12 @@ import java.util.List;
  * A tube is defined by its axis, a line in 3D space, and a radius.
  */
 public class Tube extends RadialGeometry {
-    public List<Point> findIntersections(Ray ray){
+
+
+    @Override
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
         return null;
-    };
+    }
     /**
      * The axis of the tube, represented by a {@link Ray}.
      */

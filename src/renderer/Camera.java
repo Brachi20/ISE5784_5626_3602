@@ -10,6 +10,7 @@ import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+import geometries.Intersectable.GeoPoint;
 
 public class Camera implements Cloneable {
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import static primitives.Util.isZero;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * Class Ray is the basic class representing a fundamental object in 3D geometry, the group of points on a straight line that are on one side of a given point
@@ -74,15 +75,22 @@ public class Ray {
      * @return the closest point to the head of the ray
      */
     public Point findClosestPoint(List<Point> points) {
+        if (points.isEmpty()) {
+            return null;
+        }
+        return findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null,p)).toList()).point;
+    }
+
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
         if (points == null) {
             return null;
         }
-        ListIterator<Point> iter = points.listIterator();
-        Point closest = null;
+        ListIterator<GeoPoint> iter = points.listIterator();
+        GeoPoint closest = null;
         double minDistance = Double.POSITIVE_INFINITY;
         while (iter.hasNext()) {
-            Point current = iter.next();
-            double currentDistance = head.distance(current);
+            GeoPoint current = iter.next();
+            double currentDistance = head.distance(current.point);
             if (currentDistance < minDistance) {
                 minDistance = currentDistance;
                 closest = current;
@@ -90,5 +98,4 @@ public class Ray {
         }
         return closest;
     }
-
 }

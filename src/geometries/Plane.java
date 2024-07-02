@@ -12,7 +12,7 @@ import static primitives.Util.isZero;
 /**
  * This is a class that represents a plane. It implements the geometry class
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
 
     private final Point q;
@@ -75,7 +75,9 @@ public class Plane implements Geometry {
      * @param ray The ray to find intersections with.
      * @return A list containing the intersection point, or null if there is no intersection.
      */
-    public List<Point> findIntersections(Ray ray){
+
+    @Override
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
         //calculate the t value for the distance between the head of the ray and the point of intersection
         double nv=ray.getDirection().dotProduct(normal);
         //if the ray is parallel to the plane
@@ -94,6 +96,6 @@ public class Plane implements Geometry {
             return null;
         //calculate the point of intersection
         Point p = ray.getPoint(t);
-        return List.of(p);
+        return List.of(new GeoPoint(this,p));
     }
 }
