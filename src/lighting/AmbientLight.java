@@ -3,20 +3,21 @@ package lighting;
 
 import primitives.Color;
 import primitives.Double3;
+/**
+ * Represents an ambient light source
+ */
+public class AmbientLight extends Light{
 
-public class AmbientLight {
+    public static AmbientLight NONE = new AmbientLight(Color.BLACK,Double3.ZERO);
 
-    private final Color intensity;
-    public static AmbientLight NONE = new AmbientLight(Color.BLACK,0d);
-
+    /**
+     * Constructs a new ambient light source with the given intensity
+     * @param iA the intensity of the light source
+     */
     public AmbientLight(Color iA, Double3 kA){
-        intensity=iA.scale(kA);
+        super(iA.scale(kA));
     }
 
-    public AmbientLight(Color iA, Double kA){
-        intensity=iA.scale(kA);
-    }
 
-    public Color getIntensity(){ return intensity;};
 
 }
