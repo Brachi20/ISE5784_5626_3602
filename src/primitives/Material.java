@@ -50,7 +50,7 @@ public class Material {
      * @param nShininess of int type
      * @return the material
      */
-    public Material setnShininess(int nShininess) {
+    public Material setShininess(int nShininess) {
         this.nShininess = nShininess;
         return this;
     }
