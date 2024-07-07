@@ -49,7 +49,7 @@ public class Cylinder extends Tube {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         List<Point> intersections = new LinkedList<>();
 
         // Find intersections with the side surface of the cylinder
@@ -60,7 +60,7 @@ public class Cylinder extends Tube {
 
         // There are at most 2 cut points so there is no point in continuing to play
         if (intersections.size() == 2) {
-            return intersections;
+            return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
         }
 
 
@@ -81,8 +81,9 @@ public class Cylinder extends Tube {
 
         // Sort the intersections based on the distance from the ray head
         intersections.sort((p1, p2) -> Double.compare(ray.getHead().distance(p1), ray.getHead().distance(p2)));
-
-        return intersections;
+        if(intersections.size()==1)
+            return List.of(new GeoPoint(this, intersections.get(0)));
+        return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
     }
 
 

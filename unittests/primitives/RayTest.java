@@ -2,6 +2,7 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,6 +58,8 @@ class RayTest {
         Point p26=new Point(1,0,26);
         Point p27=new Point(1,0,27);
         List<Point> points01=List.of(p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p1,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27);
+        List<Point> p0=new LinkedList<Point>(){};
+
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -65,7 +68,7 @@ class RayTest {
 
         // =============== Boundary Values Tests ==================
         //TC11: empty list
-        assertNull(r.findClosestPoint(List.of()),"find closest point is incorrect");
+        assertNull(r.findClosestPoint(p0),"find closest point is incorrect");
 
         //TC12: the closest point is the first point in the list
         List<Point> points11= List.of(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27);
