@@ -1,6 +1,7 @@
 package renderer;
 
 import geometries.Intersectable;
+import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
@@ -52,28 +53,56 @@ public class SimpleRayTracer extends RayTracerBase{
      * @return the color of the point
      */
     private Color calcLocalEffects(GeoPoint gp, Ray ray) {
-        Vector n = gp.geometry.getNormal(gp.point);
-        Vector v = ray.getDirection();
+        Vector n = gp.geometry.getNormal(gp.point);//normal of the geometry in the point
+        Vector v = ray.getDirection();//direction of the ray from the camera
         double nv = alignZero(n.dotProduct(v));
-        if (nv == 0) return Color.BLACK;
+        if (nv == 0) return Color.BLACK;//if so, the light has no effect at all
         Material material = gp.geometry.getMaterial();
         Color color = gp.geometry.getEmission();
-        for(LightSource lightSource : scene.lights) {
-            Vector l = lightSource.getL(gp.point);
+        for (LightSource lightSource : scene.lights) {
+            Vector l = lightSource.getL(gp.point);//vector from the light source to the lighting point
             double nl = alignZero(n.dotProduct(l));
-            if (nl * nv > 0) {
+            if ((nl * nv > 0) && unshaded(gp,l)) {// sign(nl) == sing(nv) check if the light is in the same direction as the normal
                 Color iL = lightSource.getIntensity(gp.point);
                 color = color.add(
-                        iL.scale(cal)),
-                double ktr = transparency(lightSource, l, n, gp);
-                if (ktr * nl > 0) {
-                    Color lightIntensity = lightSource.getIntensity(gp.point).scale(ktr);
-                    color = color.add(
-                            calcDiffusive(material.kD, n, l, lightIntensity),
-                            calcSpecular(material.kS, n, l, v, lightIntensity));
-                }
+                        iL.scale(calcDiffusive(material, nl)
+                                .add(calcSpecular(material, n, l, nl, v))));//this is the color of the light source
             }
         }
+        return color;
+    }
+
+    /**
+     * Calculate the Diffusive light
+     * @param material the material of the geometry
+     * @param nl the dot product of n and l
+     * @return the Diffusive light
+     */
+    private Double3 calcDiffusive(Material material, double nl) {
+        return material.kD.scale(Math.abs(nl));
+    }
+
+    /**
+     * Calculate the Specular light
+     * @param material the material of the geometry
+     * @param n the normal of the geometry
+     * @param l the vector from the light source to the lighting point
+     * @param nl the dot product of n and l
+     * @param v the direction of the ray from the camera
+     * @return the Specular light
+     */
+    private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
+        Vector r = l.subtract(n.scale(2 * nl));//the reflection of the light vector
+        double vr = v.dotProduct(r);
+        return material.kS.scale((-1)*vr > 0 ? Math.pow(vr, material.nShininess) : 0);
+    }
+
+    private boolean unshaded(GeoPoint gp, Vector l) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Ray ray = new Ray(gp.point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        if (intersections == null) return true;
+        return false;
     }
 
 
