@@ -14,7 +14,10 @@ import static primitives.Util.alignZero;
  */
 public class SimpleRayTracer extends RayTracerBase {
 
-    public static final double EPS = 0.1;
+    /**
+     * The delta value for the shadow rays
+     */
+    public static final double DELTA = 0.1;
 
     /**
      * Constructs a new simple ray tracer with the given scene
@@ -53,7 +56,7 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * Calculates the color of a point based on local effects
      *
-     * @param point the point
+     * @param gp the point
      * @return the color of the point
      */
     private Color calcLocalEffects(GeoPoint gp, Ray ray) {
@@ -105,7 +108,7 @@ public class SimpleRayTracer extends RayTracerBase {
 
     private boolean unshaded(GeoPoint gp, LightSource ls, Vector l, Vector n, double nl) {
         Vector lightDirection = l.scale(-1);
-        Vector epsVector = n.scale(nl < 0 ? EPS : -EPS);
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
         Point point = gp.point.add(epsVector);
         Ray ray = new Ray(point, lightDirection);
         List<Point> intersections = scene.geometries.findIntersections(ray);
@@ -118,5 +121,14 @@ public class SimpleRayTracer extends RayTracerBase {
         return true;
     }
 
-
+    /**
+     * Checks if the point is unshaded
+     * @param gp
+     * @param l
+     * @param n
+     * @return
+     */
+    private boolean unshaded(GeoPoint gp, Vector l, Vector n) {
+        return unshaded(gp, scene.lights.get(0), l, n, n.dotProduct(l));
+    }
 }
