@@ -7,7 +7,8 @@ import primitives.Vector;
 import java.util.LinkedList;
 import java.util.List;
 
-import static primitives.Util.*;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 
 /**
@@ -81,7 +82,7 @@ public class Cylinder extends Tube {
 
         // Sort the intersections based on the distance from the ray head
         intersections.sort((p1, p2) -> Double.compare(ray.getHead().distance(p1), ray.getHead().distance(p2)));
-        if(intersections.size()==1)
+        if (intersections.size() == 1)
             return List.of(new GeoPoint(this, intersections.get(0)));
         return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
     }
@@ -158,8 +159,8 @@ public class Cylinder extends Tube {
     private List<Point> findBaseIntersections(Ray ray, Point center) {
         Vector vAxis = axis.getDirection();
         Vector v = ray.getDirection();
-        if(vAxis.isParallel(v))
-            if(ray.getHead().getX()>=(center.getX()+radius))
+        if (vAxis.isParallel(v))
+            if (ray.getHead().getX() >= (center.getX() + radius))
                 return null;
         Plane basePlane = new Plane(center, vAxis);
 

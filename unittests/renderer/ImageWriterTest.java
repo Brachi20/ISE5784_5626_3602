@@ -18,8 +18,7 @@ class ImageWriterTest {
             for (int j = 0; j < nY; j++) {
                 if (i % 50 == 0 || j % 50 == 0) {
                     imageWriter.writePixel(i, j, pinkColor);
-                }
-                else {
+                } else {
                     imageWriter.writePixel(i, j, blueColor);
                 }
             }

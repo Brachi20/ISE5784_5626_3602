@@ -4,8 +4,8 @@
 package geometries;
 
 import primitives.Point;
-import primitives.Vector;
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
@@ -16,10 +16,6 @@ import java.util.List;
 public class Tube extends RadialGeometry {
 
 
-    @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
-        return null;
-    }
     /**
      * The axis of the tube, represented by a {@link Ray}.
      */
@@ -36,6 +32,11 @@ public class Tube extends RadialGeometry {
         this.axis = axis;
     }
 
+    @Override
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        return null;
+    }
+
     /**
      * Computes the normal vector to the tube at a given point.
      * Since the tube is a curved surface, the normal vector at any point on its surface
@@ -47,13 +48,13 @@ public class Tube extends RadialGeometry {
 
     @Override
     public Vector getNormal(Point p) {
-        Point p0=axis.getHead();
-        Vector v=axis.getDirection();
-        if((p.subtract(p0).dotProduct(v))==0)
+        Point p0 = axis.getHead();
+        Vector v = axis.getDirection();
+        if ((p.subtract(p0).dotProduct(v)) == 0)
             return p.subtract(p0).normalize();
         else {
-            double t=v.dotProduct(p.subtract(p0));
-            Point o=axis.getPoint(t);
+            double t = v.dotProduct(p.subtract(p0));
+            Point o = axis.getPoint(t);
             return p.subtract(o).normalize();
         }
 

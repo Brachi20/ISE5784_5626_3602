@@ -8,29 +8,32 @@ import primitives.Vector;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TriangleTest {
 
-    private final Point p000= new Point(0, 0, 0);
-    private final Point p100= new Point(1, 0, 0);
-    private final Point p010= new Point(0, 1, 0);
-    private final Point p001= new Point(0,0, 1);
+    private final Point p000 = new Point(0, 0, 0);
+    private final Point p100 = new Point(1, 0, 0);
+    private final Point p010 = new Point(0, 1, 0);
+    private final Point p001 = new Point(0, 0, 1);
 
-    /** Test method for {@link geometries.Triangle #FindIntersections(primitives.Ray)}. */
+    /**
+     * Test method for {@link geometries.Triangle #FindIntersections(primitives.Ray)}.
+     */
     @Test
     void testFindIntersections() {
 
         Triangle t1 = new Triangle(p000, p100, p010);
 
-        final Point gp1= new Point(0.25,0.25,0);
-        final var exp= List.of(gp1);
+        final Point gp1 = new Point(0.25, 0.25, 0);
+        final var exp = List.of(gp1);
 
         final Vector v = new Vector(0, 0, -1);
 
-        final Point p01= new Point(0.25, 0.25, 1);
+        final Point p01 = new Point(0.25, 0.25, 1);
         final Point p02 = new Point(2, 2, 1);
-        final Point p3= new Point(0, 1.5, 1);
+        final Point p3 = new Point(0, 1.5, 1);
         final Point p22 = new Point(0.5, 0.5, 1);
 
         // ============ Equivalence Partitions Tests ==============
@@ -41,7 +44,7 @@ class TriangleTest {
 
         assertEquals(result1.size(), 1,
                 "Wrong number of points");
-        assertEquals(exp,result1,"case: Ray cross the triangle");
+        assertEquals(exp, result1, "case: Ray cross the triangle");
 
         // TC02: Ray's line is outside the triangle opposite the edge(0 points)
         assertNull(t1.findIntersections(new Ray(p02, v)),

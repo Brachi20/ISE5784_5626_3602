@@ -1,4 +1,5 @@
 package primitives;
+
 import static primitives.Util.isZero;
 
 /**
@@ -10,6 +11,7 @@ public class Vector extends Point {
 
     /**
      * Constructs a new vector with the given coordinates.
+     *
      * @param x The x-coordinate.
      * @param y The y-coordinate.
      * @param z The z-coordinate.
@@ -23,6 +25,7 @@ public class Vector extends Point {
 
     /**
      * Constructs a new vector from a Double3 object.
+     *
      * @param obj The Double3 object.
      * @throws IllegalArgumentException if the zero vector is inserted.
      */
@@ -46,6 +49,7 @@ public class Vector extends Point {
 
     /**
      * This method adds another vector to this vector.
+     *
      * @param vecToAdd The vector to add.
      * @return The resulting vector.
      */
@@ -57,17 +61,19 @@ public class Vector extends Point {
 
     /**
      * This method scales this vector by a scalar.
+     *
      * @param num The scalar to scale by.
      * @return The scaled vector.
      */
     public Vector scale(double num) {
-        if(isZero(num))
+        if (isZero(num))
             throw new IllegalArgumentException("cant scale in zero point");
         return new Vector(xyz.scale(num));
     }
 
     /**
      * This method calculates the dot product of this vector and another vector.
+     *
      * @param vec The other vector.
      * @return The dot product.
      */
@@ -78,6 +84,7 @@ public class Vector extends Point {
 
     /**
      * This method calculates the cross product of this vector and another vector.
+     *
      * @param vec The other vector.
      * @return The cross product vector.
      */
@@ -89,16 +96,18 @@ public class Vector extends Point {
 
     /**
      * This method calculates the squared length of this vector.
+     *
      * @return The squared length.
      */
     public double lengthSquared() {
         return (this.xyz.d1 * this.xyz.d1 +
                 this.xyz.d2 * this.xyz.d2 +
-                this.xyz.d3  *this.xyz.d3);
+                this.xyz.d3 * this.xyz.d3);
     }
 
     /**
      * This method calculates the length of this vector.
+     *
      * @return The length.
      */
     public double length() {
@@ -107,20 +116,21 @@ public class Vector extends Point {
 
     /**
      * This method normalizes this vector.
+     *
      * @return The normalized vector.
      */
     public Vector normalize() {
-        double length= this.length();
-        if(isZero(length))
+        double length = this.length();
+        if (isZero(length))
             throw new IllegalArgumentException("cannot normalize Vector (0,0,0) ");
-        return this.scale(1d/length());
+        return this.scale(1d / length());
     }
 
     public boolean isParallel(Vector vAxis) {
-        if(xyz.d2 * vAxis.xyz.d3 - xyz.d3 * vAxis.xyz.d2==0&&
-                xyz.d3 * vAxis.xyz.d1 - xyz.d1 * vAxis.xyz.d3==0&&
-                xyz.d1 * vAxis.xyz.d2 - xyz.d2 * vAxis.xyz.d1==0)
+        if (xyz.d2 * vAxis.xyz.d3 - xyz.d3 * vAxis.xyz.d2 == 0 &&
+                xyz.d3 * vAxis.xyz.d1 - xyz.d1 * vAxis.xyz.d3 == 0 &&
+                xyz.d1 * vAxis.xyz.d2 - xyz.d2 * vAxis.xyz.d1 == 0)
             return true;
-        return  false;
+        return false;
     }
 }

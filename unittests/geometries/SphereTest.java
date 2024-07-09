@@ -14,26 +14,30 @@ class SphereTest {
 
     private final Point p100 = new Point(1, 0, 0);
     private final Point p110 = new Point(1, 1, 0);
-    private final Point p301=new Point(3,0,1);
-    private final Point p210 = new Point(2d,1d,0);
-    private final Point p101=new Point(1d,0d,1d);
+    private final Point p301 = new Point(3, 0, 1);
+    private final Point p210 = new Point(2d, 1d, 0);
+    private final Point p101 = new Point(1d, 0d, 1d);
 
-    private final Vector v100=new Vector(1,0,0);
-    private final Vector v001=new Vector(0,0,1);
+    private final Vector v100 = new Vector(1, 0, 0);
+    private final Vector v001 = new Vector(0, 0, 1);
 
-    /** test method for {@link geometries.Sphere #Sphere(primitives.Point...)}. */
+    /**
+     * test method for {@link geometries.Sphere #Sphere(primitives.Point...)}.
+     */
     @Test
     public void testConstructor() {
 
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: test building some sphere
-        Sphere s=new Sphere(p100,3d);
+        Sphere s = new Sphere(p100, 3d);
         assertNotNull(s, "Failed constructing a correct Sphere");
 
     }
 
-    /** Test method for {@link geometries.Sphere#getNormal(Point)}. */
+    /**
+     * Test method for {@link geometries.Sphere#getNormal(Point)}.
+     */
 
     @Test
     void testGetNormal() {
@@ -41,9 +45,9 @@ class SphereTest {
 
         // TC01: test calculate normal
 
-        Sphere s=new Sphere(p100,3d);
+        Sphere s = new Sphere(p100, 3d);
         assertEquals(v100,
-                s.getNormal(new Point(4,0,0)),
+                s.getNormal(new Point(4, 0, 0)),
                 "normal of Sphere is incorrect");
 
     }
@@ -59,35 +63,35 @@ class SphereTest {
         final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
         final var exp = List.of(gp1, gp2);
 
-        final Point gp3=new Point(1.7032248981570,0.71096746944711,0);
+        final Point gp3 = new Point(1.7032248981570, 0.71096746944711, 0);
         final var exp1 = List.of(gp3);
 
-        final Point gp4=new Point(1.92307692307692,-0.38461538461538, 0);
+        final Point gp4 = new Point(1.92307692307692, -0.38461538461538, 0);
         final var exp2 = List.of(gp4);
 
-        final Point gp5=new Point(1.70710678118654,0.70710678118654,0);
-        final Point gp6=new Point(0.2928932188134, -0.7071067811865, 0);
+        final Point gp5 = new Point(1.70710678118654, 0.70710678118654, 0);
+        final Point gp6 = new Point(0.2928932188134, -0.7071067811865, 0);
         final var exp3 = List.of(gp5, gp6);
 
-        final Point gp7=new Point(1d,-1d,0d);
+        final Point gp7 = new Point(1d, -1d, 0d);
         final var exp4 = List.of(gp7);
 
-        final Point gp8=new Point(1.55470019622522,-0.83205029433784,0.0);
+        final Point gp8 = new Point(1.55470019622522, -0.83205029433784, 0.0);
         final var exp5 = List.of(gp8);
 
         final Vector v310 = new Vector(3, 1, 0);
         final Vector v110 = new Vector(1, 1, 0);
-        final Vector v320=new Vector(3,2,0);
-        final Vector v=new Vector(0,-1,0);
-        final Vector v1=new Vector(1,-1.5,0d);
-        final Vector v2=new Vector(5,1.5,0);
-        final Vector v3=new Vector(-1,-1,0);
+        final Vector v320 = new Vector(3, 2, 0);
+        final Vector v = new Vector(0, -1, 0);
+        final Vector v1 = new Vector(1, -1.5, 0d);
+        final Vector v2 = new Vector(5, 1.5, 0);
+        final Vector v3 = new Vector(-1, -1, 0);
         final Vector v4 = new Vector(0, 1.5, 0);
 
         final Point p01 = new Point(-1d, 0d, 0d);
-        final Point p1=new Point(1d,0.5,0d);
-        final Point p2=new Point(1d,1.5,0d);
-        final Point p3=new Point(-1d,0d,1d);
+        final Point p1 = new Point(1d, 0.5, 0d);
+        final Point p2 = new Point(1d, 1.5, 0d);
+        final Point p3 = new Point(-1d, 0d, 1d);
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -101,13 +105,13 @@ class SphereTest {
         assertEquals(exp, result1, "Ray crosses sphere");
 
         // TC03: Ray starts inside the sphere (1 point)
-        final var result2 = sphere.findIntersections(new Ray(p1,v2))
+        final var result2 = sphere.findIntersections(new Ray(p1, v2))
                 .stream().sorted(Comparator.comparingDouble(p -> p.distance(p1))).toList();
         assertEquals(1, result2.size(), "Wrong number of points");
         assertEquals(exp1, result2, "Ray from inside sphere");
 
         // TC04: Ray starts after the sphere (0 points)
-        assertNull(sphere.findIntersections(new Ray(p210,v320 )),
+        assertNull(sphere.findIntersections(new Ray(p210, v320)),
                 "Ray's line out of sphere");
 
         // =============== Boundary Values Tests ==================

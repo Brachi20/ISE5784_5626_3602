@@ -11,6 +11,26 @@ import java.util.List;
 public abstract class Intersectable {
 
     /**
+     * @param ray
+     * @return
+     */
+    public final List<Point> findIntersections(Ray ray) {
+        List<GeoPoint> geoList = findGeoIntersections(ray);
+        return geoList == null ? null
+                : geoList.stream().map(gp -> gp.point).toList();
+    }
+
+    public final List<GeoPoint> findGeoIntersections(Ray ray) {
+        return findGeoIntersectionsHelper(ray);
+    }
+
+    ;
+
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        return null;
+    }
+
+    /**
      * A class that represents a point in the 3D space.
      */
     public static class GeoPoint {
@@ -51,29 +71,6 @@ public abstract class Intersectable {
                     ", point=" + point +
                     '}';
         }
-    }
-
-
-    /**
-     *
-     * @param ray
-     * @return
-     */
-    public final List<Point> findIntersections(Ray ray){
-        List<GeoPoint> geoList = findGeoIntersections(ray);
-        return geoList == null ? null
-                : geoList.stream().map(gp -> gp.point).toList();
-    };
-
-
-    public final List<GeoPoint> findGeoIntersections(Ray ray)
-    {
-        return findGeoIntersectionsHelper(ray);
-    }
-
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
-    {
-        return null;
     }
 
 }

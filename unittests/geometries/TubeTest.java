@@ -5,7 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TubeTest {
 
@@ -37,12 +38,13 @@ class TubeTest {
         // =============== Boundary Values Tests ==================
 
         //TC11: Test for a case where the vector (P-O) is perpendicular to the ray
-        assertEquals(new Vector(0,1,0),tTube.getNormal(new Point(0,4,0)),
+        assertEquals(new Vector(0, 1, 0), tTube.getNormal(new Point(0, 4, 0)),
                 "incorrect calculating normal on case:The Vector (p-p0) is orthogonal to vector direction of ray's tube ");
 
     }
+
     @Test
-    public void testFindIntersections(){
+    public void testFindIntersections() {
 
 
         // ============ Equivalence Partitions Tests ==============

@@ -1,10 +1,9 @@
 package renderer;
 
-import geometries.Intersectable;
+import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
-import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
@@ -14,6 +13,8 @@ import static primitives.Util.alignZero;
  * A simple ray tracer that traces rays and returns the color of the closest intersection point
  */
 public class SimpleRayTracer extends RayTracerBase {
+
+    public static final double EPS = 0.1;
 
     /**
      * Constructs a new simple ray tracer with the given scene
@@ -37,7 +38,6 @@ public class SimpleRayTracer extends RayTracerBase {
                 ? scene.background
                 : calcColor(ray.findClosestGeoPoint(intersections), ray);
     }
-
 
     /**
      * Calculates the color of a point
@@ -66,7 +66,7 @@ public class SimpleRayTracer extends RayTracerBase {
         for (LightSource lightSource : scene.lights) {
             Vector l = lightSource.getL(gp.point);//vector from the light source to the lighting point
             double nl = alignZero(n.dotProduct(l));
-            if ((nl * nv > 0) && unshaded(gp, lightSource,l,n,nl)) {// sign(nl) == sing(nv) check if the light is in the same direction as the normal
+            if ((nl * nv > 0) && unshaded(gp, lightSource, l, n, nl)) {// sign(nl) == sing(nv) check if the light is in the same direction as the normal
                 Color iL = lightSource.getIntensity(gp.point);
                 color = color.add(
                         iL.scale(calcDiffusive(material, nl)
@@ -87,7 +87,6 @@ public class SimpleRayTracer extends RayTracerBase {
         return material.kD.scale(Math.abs(nl));
     }
 
-
     /**
      * Calculate the Specular light
      *
@@ -101,7 +100,7 @@ public class SimpleRayTracer extends RayTracerBase {
     private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
         Vector r = l.subtract(n.scale(2 * nl));//the reflection of the light vector
         double vr = v.dotProduct(r);
-        return material.kS .scale(Math.pow(Math.max(0, v.scale(-1).dotProduct(r)), material.nShininess));
+        return material.kS.scale(Math.pow(Math.max(0, v.scale(-1).dotProduct(r)), material.nShininess));
     }
 
     private boolean unshaded(GeoPoint gp, LightSource ls, Vector l, Vector n, double nl) {
@@ -118,8 +117,6 @@ public class SimpleRayTracer extends RayTracerBase {
         }
         return true;
     }
-
-    public static final double EPS = 0.1;
 
 
 }

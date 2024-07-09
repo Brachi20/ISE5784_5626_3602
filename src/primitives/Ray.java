@@ -1,10 +1,11 @@
 package primitives;
 
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 import java.util.ListIterator;
 
 import static primitives.Util.isZero;
-import geometries.Intersectable.GeoPoint;
 
 /**
  * Class Ray is the basic class representing a fundamental object in 3D geometry, the group of points on a straight line that are on one side of a given point
@@ -44,33 +45,37 @@ public class Ray {
 
     /**
      * get method for head point of Ray
+     *
      * @return point of ray's head
      */
-    public Point getHead(){
+    public Point getHead() {
         return head;
     }
 
     /**
      * get method for vector direction of Ray
+     *
      * @return vector of ray's direction
      */
-    public Vector getDirection(){
+    public Vector getDirection() {
         return direction;
     }
 
     /**
      * get point on the ray at a distance t from the head
+     *
      * @param t distance from the head
      * @return point on the ray at a distance t from the head
      */
-    public Point getPoint(double t){
-        if(isZero(t))
+    public Point getPoint(double t) {
+        if (isZero(t))
             return head;
         return head.add(direction.scale(t));
     }
 
     /**
      * find the closest point to the head of the ray from a list of points
+     *
      * @param points list of points
      * @return the closest point to the head of the ray
      */
@@ -78,7 +83,7 @@ public class Ray {
         if (points.isEmpty()) {
             return null;
         }
-        return findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null,p)).toList()).point;
+        return findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
     }
 
     public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {

@@ -1,7 +1,5 @@
 package geometries;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
@@ -9,6 +7,8 @@ import primitives.Vector;
 
 import java.util.Comparator;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Polygons
@@ -37,7 +37,7 @@ public class PolygonTests {
 
         final Point p1 = new Point(-1, 1, 1);
         final Point p03 = new Point(0, 2, 2);
-        final Point p04= new Point(0.5, 0.25, 0.5);
+        final Point p04 = new Point(0.5, 0.25, 0.5);
         final Point p11 = new Point(0, 0.5, 0.5);
 
         // ============ Equivalence Partitions Tests ==============
@@ -56,7 +56,7 @@ public class PolygonTests {
 
         // TC03: Not in the same plane
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(p001, p100, p010, p03 ), //
+                () -> new Polygon(p001, p100, p010, p03), //
                 "Constructed a polygon with vertices that are not in the same plane");
 
         // TC04: Concave quadrangular
@@ -75,7 +75,7 @@ public class PolygonTests {
 
         // TC11: Last point = first point
         assertThrows(IllegalArgumentException.class, //
-                () -> new Polygon(p001, p100, p010,p001),
+                () -> new Polygon(p001, p100, p010, p001),
                 "Constructed a polygon with vertices on a side");
 
         // TC12: Co-located points
@@ -91,13 +91,13 @@ public class PolygonTests {
     @Test
     public void testGetNormal() {
 
-        final Point p01=new Point(-1, 1, 1);
+        final Point p01 = new Point(-1, 1, 1);
 
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: There is a simple single test here - using a quad
         Point[] pts =
-                {p001, p100, p010,p01 };
+                {p001, p100, p010, p01};
         Polygon pol = new Polygon(pts);
 
         // ensure there are no exceptions
@@ -121,10 +121,10 @@ public class PolygonTests {
     @Test
     void testFindIntersections() {
 
-        Polygon t1 = new Polygon(p000, p100, new Point(1,1,0), p010);
+        Polygon t1 = new Polygon(p000, p100, new Point(1, 1, 0), p010);
 
         final Point gp1 = new Point(0.25, 0.5, 0);
-        final var exp= List.of(gp1);
+        final var exp = List.of(gp1);
 
         final Point p01 = new Point(0.25, 0.5, 1);
         final Point p02 = new Point(-1, 0.75, 1);
@@ -144,7 +144,7 @@ public class PolygonTests {
 
         assertEquals(1, result1.size(),
                 "Wrong number of points");
-        assertEquals(exp,result1,
+        assertEquals(exp, result1,
                 "Ray's line cross the polygon");
 
         // TC02: Ray's line is outside the polygon opposite the edge(0 points)
