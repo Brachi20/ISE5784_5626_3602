@@ -1,5 +1,6 @@
 package lighting;
 
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
@@ -21,4 +22,6 @@ public interface LightSource {
      * @return the vector from the light source to the point
      */
     public Vector getL(Point point);
+
+    double getDistance(Point nwePoint);
 }
