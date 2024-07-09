@@ -5,7 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,9 +39,9 @@ class CylinderTest {
         Cylinder c1 = new Cylinder(4d, new Ray(p001, v001), 3d);
         Cylinder c2 = new Cylinder(4d, new Ray(p005, v001), 3d);
 
-        final Point p01= new Point(3, 0, 3);
-        final Point p02= new Point(1, 0, 1);
-        final Point p03 = new Point(1,0,5);
+        final Point p01 = new Point(3, 0, 3);
+        final Point p02 = new Point(1, 0, 1);
+        final Point p03 = new Point(1, 0, 5);
 
 
         // ============ Equivalence Partitions Tests ==============
@@ -84,28 +85,28 @@ class CylinderTest {
 
         Cylinder c1 = new Cylinder(4d, new Ray(p000, v001), 1d);
 
-        final Point gp01= new Point(-1,0,0.5);
-        final Point gp02 = new Point(1,0,1.5);
-        final var exp01= List.of(gp01, gp02);
+        final Point gp01 = new Point(-1, 0, 0.5);
+        final Point gp02 = new Point(1, 0, 1.5);
+        final var exp01 = List.of(gp01, gp02);
 
         final Point gp21 = new Point(1, 0, 1.25);
-        final var exp21= List.of(gp21);
+        final var exp21 = List.of(gp21);
 
-        final Point gp31 = new Point(-1,0,2);
-        final var exp31= List.of(gp31);
+        final Point gp31 = new Point(-1, 0, 2);
+        final var exp31 = List.of(gp31);
 
         final Point gp41 = new Point(0.5, 0, 4);
-        final var exp41= List.of(gp41);
+        final var exp41 = List.of(gp41);
 
 
         Point p101 = new Point(1, 0, 1);
-        Point p1=new Point(1, -1, 1);
-        Point p2 =new Point(0.5, 0, 1);
+        Point p1 = new Point(1, -1, 1);
+        Point p2 = new Point(0.5, 0, 1);
 
-        Point p02 =new Point(-2, 0, 0);
-        Point p11 =new Point(1, 0, -1);
+        Point p02 = new Point(-2, 0, 0);
+        Point p11 = new Point(1, 0, -1);
 
-        Vector v201= new Vector(2, 0, 1);
+        Vector v201 = new Vector(2, 0, 1);
         Vector v1 = new Vector(-2, 0, 1);
 
 
@@ -130,7 +131,7 @@ class CylinderTest {
 
         assertEquals(1, result2.size(),
                 "Wrong number of points");
-        assertEquals(exp21, result2,"Ray's line inside the cylinder");
+        assertEquals(exp21, result2, "Ray's line inside the cylinder");
 
         //============ Boundary Values Tests ==================
 
@@ -149,7 +150,7 @@ class CylinderTest {
 
         assertEquals(1, result3.size(),
                 "Wrong number of points");
-        assertEquals(exp31, result3,"Ray's line on the surface, goes inside the cylinder");
+        assertEquals(exp31, result3, "Ray's line on the surface, goes inside the cylinder");
 
         //Group:Ray's line is parallel to the cylinder's axis
         // TC14: Ray's line is outside the cylinder and parallel to the cylinder's axis (0 points)
@@ -161,18 +162,12 @@ class CylinderTest {
                 .sorted(Comparator.comparingDouble(p -> p.distance(p2))).toList();
 
         assertEquals(1, result4.size(),
-               "Wrong number of points");
-        assertEquals(exp41, result4,"Ray's line inside the cylinder");
+                "Wrong number of points");
+        assertEquals(exp41, result4, "Ray's line inside the cylinder");
 
         //TC16:Ray's line starts from a point outside the cylinder and tangent to the cylinder(0 point)
         assertNull(c1.findIntersections(new Ray(p1, v010)),
                 "Ray's line is tangent to the cylinder");
-
-
-
-
-
-
 
 
     }

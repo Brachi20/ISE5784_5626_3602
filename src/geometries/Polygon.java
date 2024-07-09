@@ -1,12 +1,12 @@
 package geometries;
 
-import java.util.List;
-
-import static primitives.Util.isZero;
-
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
+import static primitives.Util.isZero;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -96,24 +96,24 @@ public class Polygon extends Geometry {
 
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        if(plane.findIntersections(ray)==null)
+        if (plane.findIntersections(ray) == null)
             return null;
-        Point start=ray.getHead();
-        Vector direction=ray.getDirection();
-        Vector v1=vertices.get(0).subtract(start);
-        Vector v2=vertices.get(1).subtract(start);
-        double t=direction.dotProduct(v1.crossProduct(v2).normalize());
-        if(t==0)
+        Point start = ray.getHead();
+        Vector direction = ray.getDirection();
+        Vector v1 = vertices.get(0).subtract(start);
+        Vector v2 = vertices.get(1).subtract(start);
+        double t = direction.dotProduct(v1.crossProduct(v2).normalize());
+        if (t == 0)
             return null;
-        for(int i=1;i<size;i++){
-            v1=vertices.get(i).subtract(start);
-            v2=vertices.get((i+1)%size).subtract(start);
-            if(direction.dotProduct(v1.crossProduct(v2).normalize())==0)
+        for (int i = 1; i < size; i++) {
+            v1 = vertices.get(i).subtract(start);
+            v2 = vertices.get((i + 1) % size).subtract(start);
+            if (direction.dotProduct(v1.crossProduct(v2).normalize()) == 0)
                 return null;
-            if(t*direction.dotProduct(v1.crossProduct(v2).normalize())<0)
+            if (t * direction.dotProduct(v1.crossProduct(v2).normalize()) < 0)
                 return null;
         }
-        return List.of(new GeoPoint(this,plane.findIntersections(ray).getFirst()));
+        return List.of(new GeoPoint(this, plane.findIntersections(ray).getFirst()));
     }
 
 

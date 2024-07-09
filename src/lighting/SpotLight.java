@@ -1,7 +1,6 @@
 package lighting;
 
 import primitives.Color;
-import primitives.Double3;
 import primitives.Point;
 import primitives.Vector;
 
@@ -10,6 +9,18 @@ import primitives.Vector;
  */
 public class SpotLight extends PointLight {
     private Vector direction;
+
+    /**
+     * Constructs a new spot light source with the given intensity, position, and direction
+     *
+     * @param intensity the intensity of the light source
+     * @param position  the position of the light source
+     * @param direction the direction of the light source
+     */
+    public SpotLight(Color intensity, Point position, Vector direction) {
+        super(intensity, position);
+        this.direction = direction.normalize();
+    }
 
     @Override
     public SpotLight setKc(double kC) {
@@ -24,18 +35,6 @@ public class SpotLight extends PointLight {
     @Override
     public SpotLight setKq(double kQ) {
         return (SpotLight) super.setKq(kQ);
-    }
-
-    /**
-     * Constructs a new spot light source with the given intensity, position, and direction
-     *
-     * @param intensity the intensity of the light source
-     * @param position  the position of the light source
-     * @param direction the direction of the light source
-     */
-    public SpotLight(Color intensity, Point position, Vector direction) {
-        super(intensity, position);
-        this.direction = direction.normalize();
     }
 
     public Vector getL(Point point) {
@@ -54,4 +53,4 @@ public class SpotLight extends PointLight {
     }
 
 
-    }
+}

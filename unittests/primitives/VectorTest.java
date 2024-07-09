@@ -2,7 +2,8 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class VectorTest {
@@ -26,6 +27,7 @@ class VectorTest {
                 "add(): Vector + -itself does not throw an exception");
 
     }
+
     /**
      * Test method for
      * {@link primitives.Vector testScale(primitives.Vector)}.
@@ -33,32 +35,31 @@ class VectorTest {
 
     @Test
     void testScale() {
-        Vector v1=new Vector(1,4,8);
+        Vector v1 = new Vector(1, 4, 8);
 
         // ============ Equivalence Partitions Tests ==============
         //TC01:test scale vector with scalar
-        assertEquals(new Vector(2,8,16),v1.scale(2),"scale(): scale vector with scalar does not work correctly");
-       // =============== Boundary Values Tests ==================
+        assertEquals(new Vector(2, 8, 16), v1.scale(2), "scale(): scale vector with scalar does not work correctly");
+        // =============== Boundary Values Tests ==================
         // TC11: test zero vector from scale of Vector with zero point
-        assertThrows(IllegalArgumentException.class ,()->v1.scale(0),"scale():cant scale vector with zero");
+        assertThrows(IllegalArgumentException.class, () -> v1.scale(0), "scale():cant scale vector with zero");
     }
 
     @Test
     void testDotProduct() {
         Vector v1 = new Vector(4, 1.5, 1);
         Vector v2 = new Vector(2, -4, -2);
-        Vector v3=new Vector(1,1,1);
-        Vector v4=new Vector(2,5,4);
+        Vector v3 = new Vector(1, 1, 1);
+        Vector v4 = new Vector(2, 5, 4);
         // ============ Equivalence Partitions Tests ==============
         //TC01:Test that the dotProduct work correctly
-           assertEquals(-24,v2.dotProduct(v4),"dotProduct(): Wrong value");
+        assertEquals(-24, v2.dotProduct(v4), "dotProduct(): Wrong value");
         // =============== Boundary Values Tests ==================
         // TC11: test for return zero from scale of orthogonal vectors
-        assertEquals(0,v1.dotProduct(v2),"(): scalar multiplication between orthogonal vectors is not zero");
+        assertEquals(0, v1.dotProduct(v2), "(): scalar multiplication between orthogonal vectors is not zero");
         //TC12:test return sum of coordinates of vector from dotProduct of vector and unit vector
-        assertEquals(11,v3.dotProduct(v4),
+        assertEquals(11, v3.dotProduct(v4),
                 "dotProduct(): Scalar multiplication between a vector and a unit vector does not work correctly");
-
 
 
     }
@@ -87,16 +88,17 @@ class VectorTest {
         assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v3),
                 "crossProduct() for parallel vectors does not throw an exception");
     }
+
     /**
      * Test method for
      * {@link primitives.Vector lengthSquared(primitives.Vector)}.
      */
     @Test
     void testLengthSquared() {
-        Vector v1=new Vector(2,5,4);
+        Vector v1 = new Vector(2, 5, 4);
         // ============ Equivalence Partitions Tests ==============
         //TC01:Test that the lengthSquared work correctly
-        assertEquals(45,v1.lengthSquared(),"lengthSquared():wrong value");
+        assertEquals(45, v1.lengthSquared(), "lengthSquared():wrong value");
 
 
     }
@@ -107,10 +109,10 @@ class VectorTest {
      */
     @Test
     void testNormalize() {
-        Vector v1=new Vector(10,0,0);
+        Vector v1 = new Vector(10, 0, 0);
         // ============ Equivalence Partitions Tests ==============
         //TC01:Test that the normalize work correctly
-        assertEquals(new Vector(1,0,0),v1.normalize(),
+        assertEquals(new Vector(1, 0, 0), v1.normalize(),
                 "normalize(): The normalization operation does not work correctly");
     }
 }

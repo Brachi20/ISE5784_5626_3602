@@ -17,6 +17,7 @@ public class Plane extends Geometry {
 
     private final Point q;
     private final Vector normal;
+
     /**
      * Constructs a new plane passing through three points.
      *
@@ -25,12 +26,12 @@ public class Plane extends Geometry {
      * @param p3 The third point.
      */
     public Plane(Point p1, Point p2, Point p3) {
-        if(p1==p2||p1==p3||p2==p3)
+        if (p1 == p2 || p1 == p3 || p2 == p3)
             throw new IllegalArgumentException("ERROR:There is coalesce points");
         Vector v1 = p1.subtract(p2);
         Vector v2 = p1.subtract(p3);
         Vector n = v1.crossProduct(v2);
-        if(n.equals(Vector.ZERO))
+        if (n.equals(Vector.ZERO))
             throw new IllegalArgumentException("ERROR:the points are on the same line");
         normal = n.normalize();
         q = p1; // Assigning one of the points to q, assuming it's a point on the plane
@@ -77,25 +78,25 @@ public class Plane extends Geometry {
      */
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         //calculate the t value for the distance between the head of the ray and the point of intersection
-        double nv=ray.getDirection().dotProduct(normal);
+        double nv = ray.getDirection().dotProduct(normal);
         //if the ray is parallel to the plane
-        if(isZero(nv))
+        if (isZero(nv))
             return null;
 
         //if the head of the ray is on the plane
-        if(this.q.equals(ray.getHead()))
+        if (this.q.equals(ray.getHead()))
             return null;
-        double t =normal.dotProduct(this.q.subtract(ray.getHead())) / nv;
+        double t = normal.dotProduct(this.q.subtract(ray.getHead())) / nv;
         //if the ray is on the plane
-        if(alignZero(t)==0)
+        if (alignZero(t) == 0)
             return null;
         // if the ray is on the other direction of the plane
-        if(t<0)
+        if (t < 0)
             return null;
         //calculate the point of intersection
         Point p = ray.getPoint(t);
-        return List.of(new GeoPoint(this,p));
+        return List.of(new GeoPoint(this, p));
     }
 }

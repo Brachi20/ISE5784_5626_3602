@@ -14,6 +14,7 @@ public abstract class RayTracerBase {
 
     /**
      * Traces a ray and returns the color of the closest intersection point
+     *
      * @param ray the ray to trace
      * @return the color of the closest intersection point
      */

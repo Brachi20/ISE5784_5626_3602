@@ -5,12 +5,10 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.lang.constant.Constable;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-import geometries.Intersectable.GeoPoint;
 
 public class Camera implements Cloneable {
 
@@ -25,6 +23,13 @@ public class Camera implements Cloneable {
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
+
+    private Camera() {
+    }
+
+    public static Builder getBuilder() {
+        return new Builder();
+    }
 
     public Point getP0() {
         return p0;
@@ -52,14 +57,6 @@ public class Camera implements Cloneable {
 
     public double getDistance() {
         return distance;
-    }
-
-
-    private Camera() {
-    }
-
-    public static Builder getBuilder() {
-        return new Builder();
     }
 
     public Ray constructRay(int nX, int nY, int j, int i) {
@@ -130,7 +127,7 @@ public class Camera implements Cloneable {
     /**
      * Orients the camera to look at a specific point in the scene with a given up vector
      *
-     * @param point the point to look at
+     * @param point    the point to look at
      * @param upVector the general up vector (default is usually (0, 1, 0))
      * @return this object for chaining
      */
@@ -168,7 +165,7 @@ public class Camera implements Cloneable {
 
         // Intermediate data fields
         private Point lookAtPoint;
-        private Vector upVector=null;
+        private Vector upVector = null;
 
         /**
          * Sets the camera's position.

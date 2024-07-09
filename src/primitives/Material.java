@@ -2,11 +2,12 @@ package primitives;
 
 public class Material {
 
-    public Double3 kD=Double3.ZERO,kS=Double3.ZERO;
-    public int nShininess=0;
+    public Double3 kD = Double3.ZERO, kS = Double3.ZERO;
+    public int nShininess = 0;
 
     /**
      * setter for the diffuse reflection coefficient
+     *
      * @param kD of Double3 type
      * @return the material
      */
@@ -17,6 +18,7 @@ public class Material {
 
     /**
      * setter for the diffuse reflection coefficient
+     *
      * @param kD of double type
      * @return the material
      */
@@ -27,6 +29,7 @@ public class Material {
 
     /**
      * setter for the specular reflection coefficient
+     *
      * @param kS of Double3 type
      * @return the material
      */
@@ -37,6 +40,7 @@ public class Material {
 
     /**
      * setter for the specular reflection coefficient
+     *
      * @param kS of double type
      * @return the material
      */
@@ -47,6 +51,7 @@ public class Material {
 
     /**
      * setter for the shininess coefficient
+     *
      * @param nShininess of int type
      * @return the material
      */

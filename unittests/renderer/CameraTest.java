@@ -2,14 +2,12 @@ package renderer;
 
 import geometries.Sphere;
 import geometries.Triangle;
+import lighting.AmbientLight;
 import org.junit.jupiter.api.Test;
 import primitives.*;
-import renderer.*;
 import scene.Scene;
-import lighting.AmbientLight;
 
-import static java.awt.Color.*;
-
+import static java.awt.Color.YELLOW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 //import scene.Scene;
 
