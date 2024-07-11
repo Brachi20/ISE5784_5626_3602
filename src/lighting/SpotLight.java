@@ -9,7 +9,7 @@ import primitives.Vector;
  */
 public class SpotLight extends PointLight {
     private Vector direction;
-
+    private double narrowness; //Added a narrower parameter for the bonus of spot lighting with a narrower skin beam
     /**
      * Constructs a new spot light source with the given intensity, position, and direction
      *
@@ -20,6 +20,7 @@ public class SpotLight extends PointLight {
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
         this.direction = direction.normalize();
+        this.narrowness = 1; // Default value for narrowness
     }
 
     @Override
@@ -37,6 +38,11 @@ public class SpotLight extends PointLight {
         return (SpotLight) super.setKq(kQ);
     }
 
+    public SpotLight setNarrowness(double narrowness) {
+        this.narrowness = narrowness;
+        return this;
+    }
+
     public Vector getL(Point point) {
         return super.getL(point);
     }
@@ -48,8 +54,7 @@ public class SpotLight extends PointLight {
         if (cosTeta <= 0)
             return Color.BLACK;
         else
-            return c.scale(cosTeta);
-
+            return c.scale(Math.pow(cosTeta, narrowness));
     }
 
 

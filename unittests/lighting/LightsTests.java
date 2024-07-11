@@ -315,6 +315,39 @@ public class LightsTests {
                 .writeToImage();
     }
 
+    //Bonus- tests for spot light on sphere with a narrower skin beam
+
+    /**
+     * Produce a picture of a sphere lighted by a spotlight with a narrower skin beam
+     */
+    @Test
+    public void sphereNarrowerSpot() {
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
+                .setKl(0.001).setKq(0.0001).setNarrowness(10));
+
+        camera1.setImageWriter(new ImageWriter("lightSphereSpotWithNarrower", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    /**
+     * Produce a picture of two triangles lighted by a spotlight with a narrower skin beam
+     */
+    @Test
+    public void trianglesNarrowerSpot() {
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
+                .setKl(0.001).setKq(0.0001).setNarrowness(10));
+
+        camera2.setImageWriter(new ImageWriter("lightTrianglesSpotWithNarrower", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+
 //   /** Produce a picture of a sphere lighted by a narrow spotlight */
 //   @Test
 //   public void sphereSpotSharp() {
