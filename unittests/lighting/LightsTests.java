@@ -78,10 +78,28 @@ public class LightsTests {
      * Light color for tests with triangles
      */
     private final Color trianglesLightColor = new Color(800, 500, 250);
+    //Lights color for the Multiple light sources in tests with triangles
+    private final Color triangleDirectionalLightColor = new Color(500, 300, 100);
+    private final Color triangleSpotLightColor = new Color(300, 500, 200);
+    private final Color trianglePointLightColor = new Color(200, 200, 500);
+
     /**
      * Light color for tests with sphere
      */
     private final Color sphereLightColor = new Color(800, 500, 0);
+    //Lights color for the Multiple light sources in tests with sphere
+    /**
+     * Light color for tests with Multiple light sources on sphere
+     */
+    private final Color sphereDirectionalLightColor1 = new Color(600, 400, 200);
+    private final Color sphereSpotLightColor1 = new Color(400, 600, 300);
+    private final Color spherePointLightColor1 = new Color(300, 300, 600);
+    // Colors for the Multiple light sources in tests with sphere
+    private final Color sphereDirectionalLightColor = new Color(800, 500, 250);
+    private final Color spherePointLightColor = new Color(800, 500, 0);
+    private final Color sphereSpotLightColor = new Color(500, 250, 250);
+
+
     /**
      * Color of the sphere
      */
@@ -104,22 +122,65 @@ public class LightsTests {
                     // the left-top
                     new Point(-75, 78, 100)
             };
+
     /**
      * Position of the light in tests with sphere
      */
     private final Point sphereLightPosition = new Point(-50, -50, 25);
+    //Positions for the Multiple light sources in tests with sphere
+    /**
+     * Position of the spotLight sources in tests with sphere
+     */
+    private final Point sphereSpotLightPosition = new Point(30, 30, 50);
+    /**
+     * Position of the PointLight sources in tests with sphere
+     */
+    private final Point spherePointLightPosition = new Point(-30, -30, 50);
     /**
      * Light direction (directional and spot) in tests with sphere
      */
     private final Vector sphereLightDirection = new Vector(1, 1, -0.5);
+    //Directions for the Multiple light sources in tests with sphere
     /**
-     * Position of the light in tests with triangles
+     * DirectionLight direction in tests with Multiple light sources on sphere
+     */
+    private final Vector sphereDirectionLightDirection = new Vector(-1, -1, 0.5);
+    /**
+     * spotLight direction in tests with Multiple light sources on triangle
+     */
+    private final Vector sphereSpotLightDirection = new Vector(-1, -1, 0.5);
+
+
+    /**
+     * Position of the DirectionalLight in tests with triangles
      */
     private final Point trianglesLightPosition = new Point(30, 10, -100);
+
+    //Positions for the Multiple light sources in tests with triangles
+
     /**
-     * Light direction (directional and spot) in tests with triangles
+     * Position of the spotLight in tests with Multiple light sources on triangle
+     */
+    private final Point trianglesLightPosition1 = new Point(-30, 50, -50);
+    /**
+     * Position of the PointLight in tests with Multiple light sources on triangle
+     */
+    private final Point trianglesLightPosition2 = new Point(0, -10, 0);
+
+    /**
+     * Direction of the DirectionalLight in tests with triangles
      */
     private final Vector trianglesLightDirection = new Vector(-2, -2, -2);
+    //lights direction for the Multiple light sources in tests with triangles
+    /**
+     * DirectionLight direction in tests with Multiple light sources on triangle
+     */
+    private final Vector trianglesLightDirection1 = new Vector(2, 2, -1);
+    /**
+     * spotLight direction in tests with Multiple light sources on triangle
+     */
+    private final Vector trianglesLightDirection2 = new Vector(1, 1, -1);
+
 
     /**
      * The sphere in appropriate tests
@@ -132,7 +193,7 @@ public class LightsTests {
     private final Geometry triangle1 = new Triangle(vertices[0], vertices[1], vertices[2])
             .setMaterial(material);
     /**
-     * The first triangle in appropriate tests
+     * The second triangle in appropriate tests
      */
     private final Geometry triangle2 = new Triangle(vertices[0], vertices[1], vertices[3])
             .setMaterial(material);
@@ -224,6 +285,68 @@ public class LightsTests {
                 .renderImage()
                 .writeToImage();
     }
+
+    @Test
+    public void MultipleLightSourcesSphere() {
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new DirectionalLight(sphereDirectionalLightColor, sphereDirectionLightDirection));
+        scene1.lights.add(new PointLight(spherePointLightColor, spherePointLightPosition).setKl(0.001).setKq(0.0002));
+        scene1.lights.add(new SpotLight(sphereSpotLightColor, sphereSpotLightPosition, sphereSpotLightDirection).setKl(0.001).setKq(0.0001));
+
+        camera1.setImageWriter(new ImageWriter("multiLightSphere", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+
+    }
+
+    @Test
+    public void MultipleLightSourcesTriangles() {
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new DirectionalLight(triangleDirectionalLightColor, trianglesLightDirection1));
+        scene2.lights.add(new PointLight(trianglePointLightColor, trianglesLightPosition1).setKl(0.0005).setKq(0.003));
+        scene2.lights.add(new SpotLight(triangleSpotLightColor, trianglesLightPosition2, trianglesLightDirection2)
+                .setKl(0.001).setKq(0.0001));
+
+
+        camera2.setImageWriter(new ImageWriter("multiLightTriangles", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    //Bonus- tests for spot light on sphere with a narrower skin beam
+
+    /**
+     * Produce a picture of a sphere lighted by a spotlight with a narrower skin beam
+     */
+    @Test
+    public void sphereNarrowerSpot() {
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new SpotLight(sphereLightColor, sphereLightPosition, sphereLightDirection)
+                .setKl(0.001).setKq(0.0001).setNarrowness(10));
+
+        camera1.setImageWriter(new ImageWriter("lightSphereSpotWithNarrower", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    /**
+     * Produce a picture of two triangles lighted by a spotlight with a narrower skin beam
+     */
+    @Test
+    public void trianglesNarrowerSpot() {
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
+                .setKl(0.001).setKq(0.0001).setNarrowness(10));
+
+        camera2.setImageWriter(new ImageWriter("lightTrianglesSpotWithNarrower", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
 
 //   /** Produce a picture of a sphere lighted by a narrow spotlight */
 //   @Test
