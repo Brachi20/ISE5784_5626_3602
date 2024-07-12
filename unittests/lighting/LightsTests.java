@@ -51,7 +51,7 @@ public class LightsTests {
      * Second scene for some of tests
      */
     private final Scene scene2 = new Scene("Test scene")
-            .setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
+            .setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
     private final Vector v = new Vector(0, 0, -1);
     private final Vector Y = new Vector(0, 1, 0);
     /**

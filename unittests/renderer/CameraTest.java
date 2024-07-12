@@ -83,7 +83,7 @@ class CameraTest {
                 new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100)) // down right
         );
         //Define pink ambient lighting and green background color
-        scene.setAmbientLight(new AmbientLight(new Color(255, 191, 191), Double3.ONE))
+        scene.setAmbientLight(new AmbientLight(new Color(255, 191, 191), 1))
                 .setBackground(new Color(75, 127, 90));
 
         final Camera.Builder cameraBuilder = Camera.getBuilder()

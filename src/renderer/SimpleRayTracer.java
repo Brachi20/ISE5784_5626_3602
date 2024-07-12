@@ -106,6 +106,15 @@ public class SimpleRayTracer extends RayTracerBase {
         return material.kS.scale(Math.pow(Math.max(0, v.scale(-1).dotProduct(r)), material.nShininess));
     }
 
+    /**
+     * Checks if the point is unshaded
+     * @param gp the point
+     * @param ls the light source
+     * @param l the vector from the light source to the lighting point
+     * @param n the normal of the geometry
+     * @param nl the dot product of n and l
+     * @return true if the point is unshaded, false otherwise
+     */
     private boolean unshaded(GeoPoint gp, LightSource ls, Vector l, Vector n, double nl) {
         Vector lightDirection = l.scale(-1);
         Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
@@ -113,22 +122,13 @@ public class SimpleRayTracer extends RayTracerBase {
         Ray ray = new Ray(point, lightDirection);
         List<Point> intersections = scene.geometries.findIntersections(ray);
         if (intersections != null) {
-            for (Point nwePoint : intersections) {
-                if (nwePoint.distance(ray.getHead()) < ls.getDistance(nwePoint))
+            double lightDistance = ls.getDistance(gp.point);
+            for (Point intersection : intersections) {
+                if (gp.point.distance(intersection) < lightDistance)
                     return false;
             }
         }
         return true;
     }
 
-    /**
-     * Checks if the point is unshaded
-     * @param gp
-     * @param l
-     * @param n
-     * @return
-     */
-    private boolean unshaded(GeoPoint gp, Vector l, Vector n) {
-        return unshaded(gp, scene.lights.get(0), l, n, n.dotProduct(l));
-    }
 }

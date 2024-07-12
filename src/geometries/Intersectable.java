@@ -11,8 +11,8 @@ import java.util.List;
 public abstract class Intersectable {
 
     /**
-     * @param ray
-     * @return
+     * @param ray The ray to find intersections with.
+     * @return A list of all the intersection points of the ray with the geometry.
      */
     public final List<Point> findIntersections(Ray ray) {
         List<GeoPoint> geoList = findGeoIntersections(ray);
@@ -22,9 +22,7 @@ public abstract class Intersectable {
 
     public final List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersectionsHelper(ray);
-    }
-
-    ;
+    };
 
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         return null;
