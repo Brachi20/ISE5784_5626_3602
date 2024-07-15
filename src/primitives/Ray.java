@@ -12,6 +12,8 @@ import static primitives.Util.isZero;
  * called the head of the beam, defined by fields of point and direction
  */
 public class Ray {
+
+    private static final double DELTA = 0.1;
     private final Point head;
     private final Vector direction;
 
@@ -27,6 +29,21 @@ public class Ray {
         this.direction = direction.normalize();
     }
 
+    /**
+     * Constructs a new ray with the given head, direction and normal.
+     *
+     * @param p      The starting point of the ray.
+     * @param dir    The direction vector of the ray.
+     * @param normal The normal vector of the ray.
+     */
+    public Ray(Point p, Vector dir, Vector normal){
+        direction = dir.normalize();
+        double nv = normal.dotProduct(direction);
+        Vector delta  =normal.scale(DELTA); //moved here as to not violate DRY (we use this delta for shadow, reflected and refracted)
+        if (nv < 0)
+            delta = delta.scale(-1);
+        this.head = p.add(delta);
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

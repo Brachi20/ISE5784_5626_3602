@@ -37,7 +37,7 @@ public class Scene {
     /**
      * Adds a light source to the scene
      *
-     * @param light the light source to add
+     * @param lights the light source to add
      * @return the scene
      */
     public Scene setLights(List<LightSource> lights) {
