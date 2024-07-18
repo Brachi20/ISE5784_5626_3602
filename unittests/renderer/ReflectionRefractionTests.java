@@ -5,6 +5,8 @@ package renderer;
 
 import static java.awt.Color.*;
 
+import geometries.Cylinder;
+import geometries.Polygon;
 import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
@@ -108,4 +110,46 @@ public class ReflectionRefractionTests {
          .renderImage()
          .writeToImage();
    }
+
+   /**
+    * Creating an image in which there is a scene that consists of a partially transparent cylinder with an opaque sphere inside
+    * And next to the cylinder there is another smaller cylinder that is reflected on a polygon with 6 vertices
+    * And in addition, the transparent cylinder casts a shadow on the smaller cylinder
+    */
+   @Test
+   public void cylinderTransparentShadow() {
+      scene.geometries.add(
+              // Partially transparent cylinder
+              new Cylinder(200d, new Ray(new Point(0, 0, -50), new Vector(0, 0, -1)), 50d)
+                      .setEmission(new Color(0, 0, 255))
+                      .setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100).setKt(0.6)),
+              // Opaque sphere inside the cylinder
+              new Sphere(new Point(0, 0, -100), 25d)
+                      .setEmission(new Color(255, 0, 0))
+                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
+              // Smaller cylinder next to the transparent cylinder
+              new Cylinder(100d, new Ray(new Point(100, 0, -50), new Vector(0, 0, -1)), 25d)
+                      .setEmission(new Color(0, 255, 0))
+                      .setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
+              // Polygon with 6 vertices reflecting the smaller cylinder
+              new Polygon(
+                      new Point(150, -150, -150), new Point(200, -100, -150), new Point(200, 100, -150),
+                      new Point(150, 150, -150), new Point(100, 100, -150), new Point(100, -100, -150))
+                      .setEmission(new Color(100, 100, 100))
+                      .setMaterial(new Material().setKr(1)));
+
+      scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
+      scene.lights.add(
+              new SpotLight(new Color(1000, 600, 0), new Point(-100, -100, 500), new Vector(-1, -1, -2))
+                      .setKl(0.0004).setKq(0.0000006));
+
+      cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
+              .setVpSize(200, 200)
+              .setImageWriter(new ImageWriter("cylinderTransparentShadow", 500, 500))
+              .build()
+              .renderImage()
+              .writeToImage();
+   }
+
+
 }

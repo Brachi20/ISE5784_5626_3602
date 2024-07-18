@@ -1,12 +1,13 @@
-package lighting;
+package renderer;
 
 import static java.awt.Color.*;
 
+import lighting.AmbientLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.*;
 import primitives.*;
-import renderer.*;
 import scene.Scene;
 
 /** Testing basic shadows

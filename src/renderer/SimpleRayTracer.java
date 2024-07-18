@@ -159,18 +159,17 @@ public class SimpleRayTracer extends RayTracerBase {
         Vector n = gp.geometry.getNormal(gp.point);//normal of the geometry in the point
         Vector v = ray.getDirection();//direction of the ray from the camera
         double nv = alignZero(n.dotProduct(v));
+        if (nv == 0) return Color.BLACK;//if so, the light has no effect at all
         Color color = gp.geometry.getEmission();
         Material material = gp.geometry.getMaterial();
-        if (nv == 0) return color;//if so, the light has no effect at all
         for (LightSource lightSource : scene.lights) {
             Vector l = lightSource.getL(gp.point);//vector from the light source to the lighting point
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {// sign(nl) == sing(nv) check if the light is in the same direction as the normal
                 Double3 ktr = transparency(gp, lightSource, l, n);
                 if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
-                    Color iL = lightSource.getIntensity(gp.point);
-                    color = color.add(
-                            iL.scale(calcDiffusive(material, nl)
+                    Color iL = lightSource.getIntensity(gp.point).scale(ktr);
+                    color = color.add(iL.scale(calcDiffusive(material, nl)
                                     .add(calcSpecular(material, n, l, nl, v))));//this is the color of the light source
                 }
             }
@@ -205,31 +204,7 @@ public class SimpleRayTracer extends RayTracerBase {
             return material.kS.scale(Math.pow(Math.max(0, v.scale(-1).dotProduct(r)), material.nShininess));
         }
 
-        /**
-         * Checks if the point is unshaded
-         *
-         * @param gp the point
-         * @param ls the light source
-         * @param l  the vector from the light source to the lighting point
-         * @param n  the normal of the geometry
-         * @param nl the dot product of n and l
-         * @return true if the point is unshaded, false otherwise
-         */
-        private boolean unshaded (GeoPoint gp, LightSource ls, Vector l, Vector n,double nl){
-            Vector lightDirection = l.scale(-1);
-            Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
-            Point point = gp.point.add(epsVector);
-            Ray ray = new Ray(point, lightDirection);
-            List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
-            if (intersections != null) {
-                double lightDistance = ls.getDistance(gp.point);
-                for (var intersection : intersections) {
-                    if (gp.point.distance(intersection.point) < lightDistance)
-                        return false;
-                }
-            }
-            return true;
-        }
+
 
         /**
          * Calculates the transparency of a point
@@ -241,12 +216,9 @@ public class SimpleRayTracer extends RayTracerBase {
          */
         private Double3 transparency (GeoPoint gp, LightSource ls, Vector l, Vector n){
             Vector lightDirection = l.scale(-1);
-            double nl = n.dotProduct(l);
-            Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
-            Point point = gp.point.add(epsVector);
-            Ray ray = new Ray(point, lightDirection);
+            Ray ray = new Ray(gp.point, lightDirection,n);
             List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
-            if (intersections != null) {
+            if(intersections != null) {
                 double lightDistance = ls.getDistance(gp.point);
                 Double3 ktr = Double3.ONE;
                 for (var intersection : intersections) {
@@ -260,5 +232,7 @@ public class SimpleRayTracer extends RayTracerBase {
             }
             return Double3.ONE;
         }
+
+
 }
 
