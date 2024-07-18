@@ -16,6 +16,8 @@ public class Material {
      */
     public Material setKd(Double3 kD) {
         this.kD = kD;
+        if(Double3.ONE.lowerThan(kD.add(kS.add(kT))))
+            this.kD=Double3.ONE.subtract(kS.add(kT));
         return this;
     }
 
@@ -27,6 +29,8 @@ public class Material {
      */
     public Material setKd(double kD) {
         this.kD = new Double3(kD);
+        if(Double3.ONE.lowerThan(this.kD.add(kS.add(kT))))
+            this.kD=Double3.ONE.subtract(kS.add(kT));
         return this;
     }
 
@@ -38,6 +42,8 @@ public class Material {
      */
     public Material setKs(Double3 kS) {
         this.kS = kS;
+        if(Double3.ONE.lowerThan(kD.add(kS.add(kT))))
+            this.kS=Double3.ONE.subtract(kD.add(kT));
         return this;
     }
 
@@ -49,6 +55,8 @@ public class Material {
      */
     public Material setKs(double kS) {
         this.kS = new Double3(kS);
+        if(Double3.ONE.lowerThan(kD.add(this.kS.add(kT))))
+            this.kS=Double3.ONE.subtract(kD.add(kT));
         return this;
     }
 
@@ -60,6 +68,8 @@ public class Material {
      */
     public Material setKt(Double3 kT) {
         this.kT = kT;
+        if(Double3.ONE.lowerThan(kD.add(kS.add(kT))))
+            this.kT=Double3.ONE.subtract(kD.add(kS));
         return this;
     }
 
@@ -71,6 +81,8 @@ public class Material {
      */
     public Material setKt(double kT) {
         this.kT = new Double3(kT);
+        if(Double3.ONE.lowerThan(kD.add(this.kT.add(kS))))
+            this.kT=Double3.ONE.subtract(kD.add(kS));
         return this;
     }
 
@@ -82,6 +94,8 @@ public class Material {
      */
     public Material setKr(Double3 kR) {
         this.kR = kR;
+        if(Double3.ONE.lowerThan(kD.add(kR.add(kT))))
+            this.kR=Double3.ONE.subtract(kD.add(kT));
         return this;
     }
 
@@ -94,6 +108,8 @@ public class Material {
 
     public Material setKr(double kR) {
         this.kR = new Double3(kR);
+        if(Double3.ONE.lowerThan(kD.add(this.kR.add(kT))))
+            this.kR=Double3.ONE.subtract(kD.add(kT));
         return this;
     }
 
