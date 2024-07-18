@@ -5,12 +5,10 @@ package renderer;
 
 import static java.awt.Color.*;
 
-import geometries.Cylinder;
-import geometries.Polygon;
+import geometries.*;
+import lighting.DirectionalLight;
 import org.junit.jupiter.api.Test;
 
-import geometries.Sphere;
-import geometries.Triangle;
 import lighting.AmbientLight;
 import lighting.SpotLight;
 import primitives.*;
@@ -111,45 +109,54 @@ public class ReflectionRefractionTests {
          .writeToImage();
    }
 
+
+
+
+
+
    /**
     * Creating an image in which there is a scene that consists of a partially transparent cylinder with an opaque sphere inside
     * And next to the cylinder there is another smaller cylinder that is reflected on a polygon with 6 vertices
     * And in addition, the transparent cylinder casts a shadow on the smaller cylinder
     */
    @Test
-   public void cylinderTransparentShadow() {
+   public void reflectionRefractionFiveObjectsTest() {
+
       scene.geometries.add(
-              // Partially transparent cylinder
-              new Cylinder(200d, new Ray(new Point(0, 0, -50), new Vector(0, 0, -1)), 50d)
-                      .setEmission(new Color(0, 0, 255))
-                      .setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100).setKt(0.6)),
-              // Opaque sphere inside the cylinder
-              new Sphere(new Point(0, 0, -100), 25d)
-                      .setEmission(new Color(255, 0, 0))
-                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(100)),
-              // Smaller cylinder next to the transparent cylinder
-              new Cylinder(100d, new Ray(new Point(100, 0, -50), new Vector(0, 0, -1)), 25d)
-                      .setEmission(new Color(0, 255, 0))
-                      .setMaterial(new Material().setKd(0.4).setKs(0.3).setShininess(100)),
-              // Polygon with 6 vertices reflecting the smaller cylinder
               new Polygon(
-                      new Point(150, -150, -150), new Point(200, -100, -150), new Point(200, 100, -150),
-                      new Point(150, 150, -150), new Point(100, 100, -150), new Point(100, -100, -150))
-                      .setEmission(new Color(100, 100, 100))
-                      .setMaterial(new Material().setKr(1)));
+                      new Point(-210, -210, -100),
+                      new Point(210, -210, -100),
+                      new Point(80, 90, -100),
+                      new Point(-80, 90, -100)
+              ).setEmission(new Color(173, 216, 230)) //
+              .setMaterial(new Material().setKr(new Double3(0.5, 0, 0.4)).setKd(0.5).setKs(0.5).setShininess(60)),
 
-      scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
+              new Sphere(new Point(-20, -120, -80), 30d)//blue
+              .setEmission(new Color(0, 0, 255))
+              .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)),
+
+              new Sphere(new Point(-100, -40, -70), 50d)//perple
+                      .setEmission(new Color(128, 0, 128))
+                      .setMaterial(new Material().setKd(0.2).setKs(0.1).setShininess(100).setKt(0.7)));
+
       scene.lights.add(
-              new SpotLight(new Color(1000, 600, 0), new Point(-100, -100, 500), new Vector(-1, -1, -2))
-                      .setKl(0.0004).setKq(0.0000006));
+              new SpotLight(new Color(120, 120, 120),new Point(10, -200, 100), new Vector(-1, 1, -1)));
 
-      cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
+
+      cameraBuilder.setLocation(new Point(0, 0, 2000)).setVpDistance(1000)
               .setVpSize(200, 200)
-              .setImageWriter(new ImageWriter("cylinderTransparentShadow", 500, 500))
+              .setImageWriter(new ImageWriter("reflectionFiveObjectsTest", 600, 600))
               .build()
               .renderImage()
               .writeToImage();
    }
 
+   //      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
+//
+//      scene.lights.add(
+//              new SpotLight(new Color(700, 400, 400), new Point(30, 25, 0), new Vector(0, 0, -1)) //
+//                      .setKl(4E-5).setKq(2E-7));
+////      scene.lightSourceList.add(new PointLight(new Color(160, 80, 240), new Point3D(-100, -100, 100))//
+////              .setKl(0.00000000001).setKq(0.0000000001));
 
 }
