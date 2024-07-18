@@ -193,7 +193,20 @@ public class Camera implements Cloneable {
             camera.vUp = up.normalize();
             return this;
         }
+        public Builder setDirection(Point front, Vector up) {
+            camera.vUp = up.normalize();
 
+            if(camera.p0.equals(front)){
+                throw new IllegalArgumentException("ERROR:front cannot be the same as the camera location");
+            }
+            Vector towards = front.subtract(camera.p0).normalize();
+            if(towards.dotProduct(camera.vUp) == 0){
+                throw new IllegalArgumentException("ERROR:front and up are not orthogonal");
+            }
+            camera.vTo = towards;
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            return  this;
+        }
         /**
          * Sets the camera's distance from the view plane.
          *
@@ -315,6 +328,8 @@ public class Camera implements Cloneable {
                 return null;
             }
         }
+
+
     }
 }
 

@@ -39,10 +39,10 @@ public class Ray {
     public Ray(Point p, Vector dir, Vector normal){
         direction = dir.normalize();
         double nv = normal.dotProduct(direction);
-        Vector delta  =normal.scale(DELTA); //moved here as to not violate DRY (we use this delta for shadow, reflected and refracted)
-        if (nv < 0)
-            delta = delta.scale(-1);
-        this.head = p.add(delta);
+        if(isZero(nv))
+            head = p;
+        else
+            head = p.add(normal.scale(nv > 0 ? DELTA : -DELTA));
     }
     @Override
     public boolean equals(Object obj) {
