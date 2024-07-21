@@ -52,6 +52,8 @@ public class SimpleRayTracer extends RayTracerBase {
         double vn = v.dotProduct(n);
         if (vn == 0) return null;    //if the ray is parallel to the normal
         Vector r = v.subtract(n.scale(2 * vn));  //the reflection of the ray
+        if (vn == 0) return null;
+        Vector r = v.subtract(n.scale(2 * vn));
         return new Ray(gp.point, r, n);
     }
 
