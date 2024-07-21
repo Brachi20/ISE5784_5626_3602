@@ -109,5 +109,4 @@ public class ReflectionRefractionTests {
          .renderImage()
          .writeToImage();
    }
-   //i dont see the test here
 }
