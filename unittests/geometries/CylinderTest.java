@@ -77,6 +77,29 @@ class CylinderTest {
 
     }
 
+    //veribles for the testFindIntersections and testFindGeoIntersectionsHelper
+    private final Cylinder c1 = new Cylinder(4d, new Ray(p000, v001), 1d);
+
+    private final Point gp01 = new Point(-1, 0, 0.5);
+    private final Point gp02 = new Point(1, 0, 1.5);
+
+    private final Point gp21 = new Point(1, 0, 1.25);
+
+    private final Point gp31 = new Point(-1, 0, 2);
+
+    private final Point gp41 = new Point(0.5, 0, 4);
+
+
+    private Point p101 = new Point(1, 0, 1);
+    private Point p1 = new Point(1, -1, 1);
+    private Point p2 = new Point(0.5, 0, 1);
+
+    private Point p02 = new Point(-2, 0, 0);
+    private Point p11 = new Point(1, 0, -1);
+
+    private Vector v201 = new Vector(2, 0, 1);
+    private Vector v1 = new Vector(-2, 0, 1);
+
 
     /**
      * Test method for {@link geometries.Cylinder #FindIntersections(primitives.Ray)}.
@@ -84,32 +107,10 @@ class CylinderTest {
     @Test
     void testFindIntersections() {
 
-        Cylinder c1 = new Cylinder(4d, new Ray(p000, v001), 1d);
-
-        final Point gp01 = new Point(-1, 0, 0.5);
-        final Point gp02 = new Point(1, 0, 1.5);
         final var exp01 = List.of(gp01, gp02);
-
-        final Point gp21 = new Point(1, 0, 1.25);
         final var exp21 = List.of(gp21);
-
-        final Point gp31 = new Point(-1, 0, 2);
         final var exp31 = List.of(gp31);
-
-        final Point gp41 = new Point(0.5, 0, 4);
         final var exp41 = List.of(gp41);
-
-
-        Point p101 = new Point(1, 0, 1);
-        Point p1 = new Point(1, -1, 1);
-        Point p2 = new Point(0.5, 0, 1);
-
-        Point p02 = new Point(-2, 0, 0);
-        Point p11 = new Point(1, 0, -1);
-
-        Vector v201 = new Vector(2, 0, 1);
-        Vector v1 = new Vector(-2, 0, 1);
-
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -179,31 +180,11 @@ class CylinderTest {
 
     @Test
     void testFindGeoIntersectionsHelper() {
-        Cylinder c1 = new Cylinder(4d, new Ray(p000, v001), 1d);
 
-        final Point gp01 = new Point(-1, 0, 0.5);
-        final Point gp02 = new Point(1, 0, 1.5);
         final var exp01 = List.of(new Intersectable.GeoPoint(c1,gp01), new Intersectable.GeoPoint(c1,gp02));
-
-        final Point gp21 = new Point(1, 0, 1.25);
         final var exp21 = List.of(new Intersectable.GeoPoint(c1,gp21));
-
-        final Point gp31 = new Point(-1, 0, 2);
         final var exp31 = List.of(new Intersectable.GeoPoint(c1,gp31));
-
-        final Point gp41 = new Point(0.5, 0, 4);
         final var exp41 = List.of(new Intersectable.GeoPoint(c1,gp41));
-
-
-        Point p101 = new Point(1, 0, 1);
-        Point p1 = new Point(1, -1, 1);
-        Point p2 = new Point(0.5, 0, 1);
-
-        Point p02 = new Point(-2, 0, 0);
-        Point p11 = new Point(1, 0, -1);
-
-        Vector v201 = new Vector(2, 0, 1);
-        Vector v1 = new Vector(-2, 0, 1);
 
 
         // ============ Equivalence Partitions Tests ==============
