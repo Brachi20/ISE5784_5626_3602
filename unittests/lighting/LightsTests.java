@@ -1,5 +1,6 @@
 package lighting;
 
+import geometries.Cylinder;
 import geometries.Geometry;
 import geometries.Sphere;
 import geometries.Triangle;
