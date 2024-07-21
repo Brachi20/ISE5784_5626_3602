@@ -10,11 +10,6 @@ public class Geometries extends Intersectable {
 
     private List<Intersectable> geometries = new LinkedList<Intersectable>();
 
-    public Geometries() {
-    }
-
-    ;
-
     public Geometries(Intersectable... geometries) {
         add(geometries);
     }
@@ -25,10 +20,10 @@ public class Geometries extends Intersectable {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         List<GeoPoint> intersections = null;
         for (Intersectable geo : geometries) {
-            var geoPoints = geo.findGeoIntersections(ray);
+            var geoPoints = geo.findGeoIntersections(ray,maxDistance);
             if (geoPoints != null) {
                 if (intersections == null)
                     intersections = new LinkedList<GeoPoint>();

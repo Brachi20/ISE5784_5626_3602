@@ -95,8 +95,8 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        if (plane.findIntersections(ray) == null)
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        if (plane.findGeoIntersections(ray,maxDistance) == null)
             return null;
         Point start = ray.getHead();
         Vector direction = ray.getDirection();
@@ -113,7 +113,7 @@ public class Polygon extends Geometry {
             if (t * direction.dotProduct(v1.crossProduct(v2).normalize()) < 0)
                 return null;
         }
-        return List.of(new GeoPoint(this, plane.findIntersections(ray).getFirst()));
+        return List.of(plane.findGeoIntersections(ray,maxDistance).getFirst());
     }
 
 
