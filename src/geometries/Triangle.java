@@ -17,8 +17,8 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        if (plane.findIntersections(ray) == null)
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        if (plane.findGeoIntersections(ray,maxDistance) == null)
             return null;
         Point start = ray.getHead();
         Vector direction = ray.getDirection();

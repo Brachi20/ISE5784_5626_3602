@@ -27,24 +27,33 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         Point p0 = ray.getHead(); // the head of the ray
         Vector v = ray.getDirection(); // the direction of the ray
         if (ray.getHead().equals(this.center)) // if the head of the ray is the center of the sphere
-            return List.of(new GeoPoint(this, p0.add(v.scale(this.radius)))); // return the point of intersection
+            if(this.radius<=maxDistance)
+              return List.of(new GeoPoint(this, p0.add(v.scale(this.radius)))); // return the point of intersection
         Vector u = this.center.subtract(p0); // the vector from the head of the ray to the center of the sphere
         double tm = v.dotProduct(u); // the projection of u on the ray
         double d = Math.sqrt(u.lengthSquared() - tm * tm); // the distance between the center of the sphere and the ray
         if (d >= this.radius) // if the distance is bigger or equal to the radius of the sphere
             return null;
-        double th = Math.sqrt(this.radius * this.radius - d * d);// the distance between the point of intersection and the projection of the center of the sphere on the ray
+        double th = Math.sqrt(this.radius * this.radius - d * d);// the distance between the point of intersection
+        // and the projection of the center of the sphere on the ray
         double t1 = tm - th; // the distance between the head of the ray and the point of intersection
         double t2 =tm + th; // the distance between the head of the ray and the point of intersection
-        if (t1 > 0 && t2 > 0) // if the ray is in the direction of the sphere
-            return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2))); // return the points of intersection
-        if (t1 > 0) // if the ray is in the direction of the sphere
+        if (t1 > 0 && t2 > 0) { // if the ray is in the direction of the sphere
+            if (t1 <= maxDistance && t2 <= maxDistance)
+                return List.of(new GeoPoint(this, ray.getPoint(t1)),
+                        new GeoPoint(this, ray.getPoint(t2))); // return the points of intersection
+            if (t1 <= maxDistance)
+                return List.of(new GeoPoint(this, ray.getPoint(t1))); // return the point of intersection
+            if (t2 <= maxDistance)
+                return List.of(new GeoPoint(this, ray.getPoint(t2))); // return the point of intersection
+        }
+        if (t1 > 0 && t1<= maxDistance) // if the ray is in the direction of the sphere
             return List.of(new GeoPoint(this, ray.getPoint(t1))); // return the point of intersection
-        if (t2 > 0) // if the ray is in the direction of the sphere
+        if (t2 > 0 && t2<= maxDistance) // if the ray is in the direction of the sphere
             return List.of(new GeoPoint(this, ray.getPoint(t2))); // return the point of intersection
         return null;
     }

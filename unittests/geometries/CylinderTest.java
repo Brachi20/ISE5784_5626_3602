@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import geometries.Intersectable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -171,4 +172,126 @@ class CylinderTest {
 
 
     }
+
+    /**
+     * Test method for {@link geometries.Cylinder #findGeoIntersectionsHelper(primitives.Ray, double)}.
+     */
+
+    @Test
+    void testFindGeoIntersectionsHelper() {
+        Cylinder c1 = new Cylinder(4d, new Ray(p000, v001), 1d);
+
+        final Point gp01 = new Point(-1, 0, 0.5);
+        final Point gp02 = new Point(1, 0, 1.5);
+        final var exp01 = List.of(new Intersectable.GeoPoint(c1,gp01), new Intersectable.GeoPoint(c1,gp02));
+
+        final Point gp21 = new Point(1, 0, 1.25);
+        final var exp21 = List.of(new Intersectable.GeoPoint(c1,gp21));
+
+        final Point gp31 = new Point(-1, 0, 2);
+        final var exp31 = List.of(new Intersectable.GeoPoint(c1,gp31));
+
+        final Point gp41 = new Point(0.5, 0, 4);
+        final var exp41 = List.of(new Intersectable.GeoPoint(c1,gp41));
+
+
+        Point p101 = new Point(1, 0, 1);
+        Point p1 = new Point(1, -1, 1);
+        Point p2 = new Point(0.5, 0, 1);
+
+        Point p02 = new Point(-2, 0, 0);
+        Point p11 = new Point(1, 0, -1);
+
+        Vector v201 = new Vector(2, 0, 1);
+        Vector v1 = new Vector(-2, 0, 1);
+
+
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: Ray's line is outside the cylinder (0 points)
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p1, v201),Double.POSITIVE_INFINITY),
+                "Ray's line out of cylinder");
+
+        // TC02:Ray starts before and crosses the cylinder (2 points)
+        final var result1 = c1.findGeoIntersectionsHelper(new Ray(p02, v201),3.36).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p02))).toList();
+
+        assertEquals(2, result1.size(),
+                "Wrong number of points, three are 2 points of intersection in the range of 3.35 from the head of the ray");
+        assertEquals(exp01, result1,
+                "Ray crosses the cylinder");
+
+        //TC03: Ray's line is starts inside the cylinder and goes outside it (1 point)
+        final var result2 = c1.findGeoIntersectionsHelper(new Ray(p2, v201),0.56).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p2))).toList();
+
+        assertEquals(1, result2.size(),
+                "Wrong number of points, there is 1 point of intersection in the range of 0.56 from the head of the ray");
+        assertEquals(exp21, result2, "Ray's line inside the cylinder");
+
+        //============ Boundary Values Tests ==================
+
+        //Group:Ray's line is on the surface of the cylinder
+        // TC11: Ray's line is on the cylinder's surface and parallel to the cylinder's axis (0 points)
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p11, v001),Double.POSITIVE_INFINITY),
+                "Ray's line on the surface");
+
+        // TC12: Ray's line is on the cylinder's surface and goes outside it (0 points)
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p101, v201),Double.POSITIVE_INFINITY),
+                "Ray's line on the surface");
+
+        // TC13: Ray's line is on the cylinder's surface and goes inside it (1 point)
+        final var result3 = c1.findGeoIntersectionsHelper(new Ray(p101, v1),2.24).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p101))).toList();
+
+        assertEquals(1, result3.size(),
+                "Wrong number of points, there is 1 point of intersection in the range of 2.24 from the head of the ray");
+        assertEquals(exp31, result3, "Ray's line on the surface, goes inside the cylinder");
+
+        //Group:Ray's line is parallel to the cylinder's axis
+        // TC14: Ray's line is outside the cylinder and parallel to the cylinder's axis (0 points)
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p1, v001),Double.POSITIVE_INFINITY),
+                "Ray's line outside the cylinder");
+
+        //TC15: Ray's line is starts inside the cylinder and parallel to the cylinder's axis (1 point)
+        final var result4 = c1.findGeoIntersectionsHelper(new Ray(p2, v001),3d).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p2))).toList();
+
+        assertEquals(1, result4.size(),
+                "Wrong number of points, there is 1 point of intersection in the range of 3 from the head of the ray");
+        assertEquals(exp41, result4, "Ray's line inside the cylinder");
+
+        //TC16:Ray's line starts from a point outside the cylinder and tangent to the cylinder(0 point)
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p1, v010),Double.POSITIVE_INFINITY),
+                "Ray's line is tangent to the cylinder");
+
+        //TC17: case of TC13 with maxDistance = 2.23
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p101, v1),2.23),
+                "Ray's line on the surface, goes inside the cylinder, but the point is out of the range");
+
+        //TC18: case of TC15 with maxDistance = 2.9
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p2, v001),2.9),
+                "Ray's line inside the cylinder, but the point is out of the range");
+
+        //TC19: case of TC02 with maxDistance = 2
+        final var result5 = c1.findGeoIntersectionsHelper(new Ray(p02, v201),2d).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p02))).toList();
+        assertEquals(1, result5.size(),
+                "Wrong number of points, there is 1 point of intersection in the range of 2 from the head of the ray");
+        assertEquals(List.of(exp01.get(0)), result5,
+                "Ray crosses the cylinder, wrong calculated point");
+        //TC20:case of TC02 with maxDistance = 0.25
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p02, v201),0.25),
+                "Ray crosses the cylinder, but the point is out of the range");
+
+        //TC21: case of TC03 with maxDistance = 0.5
+        assertNull(c1.findGeoIntersectionsHelper(new Ray(p2, v201),0.5),
+                "Ray's line inside the cylinder, but the point is out of the range");
+
+
+
+
+    }
+
+
 }

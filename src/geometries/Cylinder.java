@@ -4,6 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,28 +51,28 @@ public class Cylinder extends Tube {
 
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        List<Point> intersections = new LinkedList<>();
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        List<GeoPoint> intersections = new LinkedList<>();
 
         // Find intersections with the side surface of the cylinder
-        List<Point> sideIntersections = findSideIntersections(ray);
+        List<GeoPoint> sideIntersections = findSideIntersections(ray,maxDistance);
         if (sideIntersections != null) {
             intersections.addAll(sideIntersections);
         }
 
         // There are at most 2 cut points so there is no point in continuing to play
         if (intersections.size() == 2) {
-            return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
+            return List.of( intersections.get(0), intersections.get(1));
         }
 
 
         // Find intersections with the bottom and top bases of the cylinder
-        List<Point> bottomBaseIntersections = findBaseIntersections(ray, axis.getHead());
+        List<GeoPoint> bottomBaseIntersections = findBaseIntersections(ray, axis.getHead(),maxDistance);
         if (bottomBaseIntersections != null) {
             intersections.addAll(bottomBaseIntersections);
         }
 
-        List<Point> topBaseIntersections = findBaseIntersections(ray, axis.getHead().add(axis.getDirection().scale(height)));
+        List<GeoPoint> topBaseIntersections = findBaseIntersections(ray, axis.getHead().add(axis.getDirection().scale(height)),maxDistance);
         if (topBaseIntersections != null) {
             intersections.addAll(topBaseIntersections);
         }
@@ -81,14 +82,15 @@ public class Cylinder extends Tube {
         }
 
         // Sort the intersections based on the distance from the ray head
-        intersections.sort((p1, p2) -> Double.compare(ray.getHead().distance(p1), ray.getHead().distance(p2)));
+        intersections.sort((p1, p2) -> Double.compare(ray.getHead().distance(p1.point), ray.getHead().distance(p2.point)));
         if (intersections.size() == 1)
-            return List.of(new GeoPoint(this, intersections.get(0)));
-        return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
+            return List.of(intersections.get(0));
+        return List.of( intersections.get(0), intersections.get(1));
     }
 
 
-    private List<Point> findSideIntersections(Ray ray) {
+    private List<GeoPoint> findSideIntersections(Ray ray, double maxDistance) {
+        List<GeoPoint> intersections;
         Point p0 = ray.getHead();
         Vector v = ray.getDirection();
 
@@ -115,6 +117,8 @@ public class Cylinder extends Tube {
 
         if (isZero(discriminant)) {
             double t = alignZero(-b / (2 * a));
+            if(t>maxDistance)
+                return null;
             Point p = ray.getPoint(t);
             // The scalar product returns the charge of the vector P-P1 on the axis direction of the cylinder,
             // i.e. the distance of the point p from the top of the roll
@@ -122,7 +126,9 @@ public class Cylinder extends Tube {
             if (z > 0 && z < height) {
                 // Check if the ray started inside the cylinder
                 if (p0.distanceSquared(p1.add(vAxis.scale(z))) < radius * radius) {
-                    return List.of(p); // Ray started inside the cylinder, return the intersection point
+                    intersections=new ArrayList<>();
+                    intersections.add(new GeoPoint(this,p));
+                    return intersections;// Ray started inside the cylinder, return the intersection point
                 } else {
                     return null; // Ray started outside the cylinder, this is a tangential intersection
                 }
@@ -131,32 +137,33 @@ public class Cylinder extends Tube {
         } else if (discriminant < 0) {
             return null;
         }
-
-        List<Point> intersections = new LinkedList<>();
+        intersections=new ArrayList<>();
         double sqrtDiscriminant = Math.sqrt(discriminant);
         double t1 = alignZero((-b - sqrtDiscriminant) / (2 * a));
         double t2 = alignZero((-b + sqrtDiscriminant) / (2 * a));
         // t1 and t2 expressions that express the distances from the head point of the beam (p0) along the direction
         // of the beam (v) to the intersection points
-        addValidIntersection(intersections, ray, t1, p1, vAxis);
-        addValidIntersection(intersections, ray, t2, p1, vAxis);
+        if(t1<=maxDistance)
+          addValidIntersection(intersections, ray, t1, p1, vAxis);
+        if(t2<=maxDistance)
+         addValidIntersection(intersections, ray, t2, p1, vAxis);
 
         return intersections.isEmpty() ? null : intersections;
     }
 
-    private void addValidIntersection(List<Point> intersections, Ray ray, double t, Point p1, Vector vAxis) {
+    private void addValidIntersection(List<GeoPoint> intersections, Ray ray, double t, Point p1, Vector vAxis) {
         if (t > 0) {
             Point p = ray.getPoint(t);
             double z = alignZero(p.subtract(p1).dotProduct(vAxis));
             // The scalar product returns the charge of the vector P-P1 on the axis direction of the cylinder,
             // i.e. the distance of the point p from the top of the roll
             if (z > 0 && z < height) {
-                intersections.add(p);
+                intersections.add(new GeoPoint(this,p));
             }
         }
     }
 
-    private List<Point> findBaseIntersections(Ray ray, Point center) {
+    private List<GeoPoint> findBaseIntersections(Ray ray, Point center, double maxDistance) {
         Vector vAxis = axis.getDirection();
         Vector v = ray.getDirection();
         if (vAxis.isParallel(v))
@@ -164,15 +171,15 @@ public class Cylinder extends Tube {
                 return null;
         Plane basePlane = new Plane(center, vAxis);
 
-        List<Point> baseIntersections = basePlane.findIntersections(ray);
+        List<GeoPoint> baseIntersections = basePlane.findGeoIntersections(ray,maxDistance);
         if (baseIntersections == null) {
             return null;
         }
 
-        List<Point> intersections = new LinkedList<>();
-        for (Point p : baseIntersections) {
-            if (alignZero(p.distance(center) - radius) <= 0) {
-                intersections.add(p);
+        List<GeoPoint> intersections = new LinkedList<>();
+        for (GeoPoint p : baseIntersections) {
+            if (alignZero(p.point.distance(center) - radius) <= 0) {
+                intersections.add(new GeoPoint(this,p.point));
             }
         }
         return intersections.isEmpty() ? null : intersections;

@@ -78,7 +78,7 @@ public class Plane extends Geometry {
      */
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray,  double maxDistance) {
         //calculate the t value for the distance between the head of the ray and the point of intersection
         double nv = ray.getDirection().dotProduct(normal);
         //if the ray is parallel to the plane
@@ -94,6 +94,8 @@ public class Plane extends Geometry {
             return null;
         // if the ray is on the other direction of the plane
         if (t < 0)
+            return null;
+        if(alignZero(t-maxDistance)>0)
             return null;
         //calculate the point of intersection
         Point p = ray.getPoint(t);
