@@ -6,6 +6,7 @@ package renderer;
 import static java.awt.Color.*;
 
 import geometries.Polygon;
+import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
@@ -121,7 +122,7 @@ public class ReflectionRefractionTests {
     * And in addition, the transparent cylinder casts a shadow on the smaller cylinder
     */
    @Test
-   public void reflectionRefractionFiveObjectsTest() {
+   public void reflectionRefractionFourObjectsTest() {
 
       scene.geometries.add(
               new Polygon(
@@ -129,20 +130,24 @@ public class ReflectionRefractionTests {
                       new Point(210, -210, -100),
                       new Point(80, 90, -100),
                       new Point(-80, 90, -100)
-              ).setEmission(new Color(173, 216, 230)) //
-              .setMaterial(new Material().setKr(new Double3(0.5, 0, 0.4)).setKd(0.5).setKs(0.5).setShininess(60)),
+              ).setEmission(new Color(20, 20, 20))
+                      .setMaterial(new Material().setKr(new Double3(0.8, 0.8, 0.8)).setKd(0.5).setKs(0.5).setShininess(60)),
 
-              new Sphere(new Point(-20, -120, -80), 30d)//blue
-              .setEmission(new Color(0, 0, 255))
-              .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)),
+              new Sphere(new Point(-70, -110, -80), 30d)// blue sphere
+                      .setEmission(new Color(0, 0, 255))
+                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)),
 
-              new Sphere(new Point(-100, -40, -70), 50d)//perple
+              new Sphere(new Point(-100, -40, -100), 50d)// purple sphere
                       .setEmission(new Color(128, 0, 128))
-                      .setMaterial(new Material().setKd(0.2).setKs(0.1).setShininess(100).setKt(0.7)));
+                      .setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(50).setKt(0.5)));
 
       scene.lights.add(
-              new SpotLight(new Color(120, 120, 120),new Point(10, -200, 100), new Vector(-1, 1, -1)));
+              new SpotLight(new Color(255, 255, 255), new Point(-100, -100, 200), new Vector(1, 1, -3))
+                      .setKl(0.0001).setKq(0.00001).setNarrowness(10)); // הגברת עוצמת התאורה והצרת הקרן למראה תלת ממדי
 
+        scene.lights.add(
+              new PointLight(new Color(255, 200, 150), new Point(100, -200, 100))
+                      .setKl(0.0001).setKq(0.00001)); // אור נוסף להדגשת הצללים וההשתקפויות
 
       cameraBuilder.setLocation(new Point(0, 0, 2000)).setVpDistance(1000)
               .setVpSize(200, 200)
@@ -151,6 +156,9 @@ public class ReflectionRefractionTests {
               .renderImage()
               .writeToImage();
    }
+
+
+
 
    //      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
 //
