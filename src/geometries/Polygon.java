@@ -4,6 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -96,7 +97,8 @@ public class Polygon extends Geometry {
 
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
-        if (plane.findGeoIntersections(ray,maxDistance) == null)
+        List<GeoPoint> intersections = plane.findGeoIntersections(ray,maxDistance);
+        if (intersections == null)
             return null;
         Point start = ray.getHead();
         Vector direction = ray.getDirection();
@@ -113,7 +115,7 @@ public class Polygon extends Geometry {
             if (t * direction.dotProduct(v1.crossProduct(v2).normalize()) < 0)
                 return null;
         }
-        return List.of(plane.findGeoIntersections(ray,maxDistance).getFirst());
+        return List.of(new GeoPoint(this,intersections.getFirst().point));
     }
 
 

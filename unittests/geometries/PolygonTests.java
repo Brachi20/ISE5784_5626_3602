@@ -115,26 +115,26 @@ public class PolygonTests {
                     "Polygon's normal is not orthogonal to one of the edges");
     }
 
+    //veribles for the testFindIntersections and testFindGeoIntersectionsHelper
+    private final Polygon t1 = new Polygon(p000, p100, new Point(1, 1, 0), p010);
+
+    private final Point gp1 = new Point(0.25, 0.5, 0);
+
+    private final Point p01 = new Point(0.25, 0.5, 1);
+    private final Point p02 = new Point(-1, 0.75, 1);
+    private final Point p03 = new Point(1.5, 0, 1);
+    private final Point p11 = new Point(0, 0.5, 1);
+    private final Point p13 = new Point(0, 1.5, 1);
+
+    private final Vector v = new Vector(0, 0, -1);
+
     /**
      * Test method for {@link geometries.Polygon #FindIntersections(primitives.Ray)}.
      */
     @Test
     void testFindIntersections() {
 
-        Polygon t1 = new Polygon(p000, p100, new Point(1, 1, 0), p010);
-
-        final Point gp1 = new Point(0.25, 0.5, 0);
         final var exp = List.of(gp1);
-
-        final Point p01 = new Point(0.25, 0.5, 1);
-        final Point p02 = new Point(-1, 0.75, 1);
-        final Point p03 = new Point(1.5, 0, 1);
-        final Point p11 = new Point(0, 0.5, 1);
-        final Point p13 = new Point(0, 1.5, 1);
-
-
-        final Vector v = new Vector(0, 0, -1);
-
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -167,6 +167,52 @@ public class PolygonTests {
 
         // TC13: Ray's line is on the edge's continuation(0 points)
         assertNull(t1.findIntersections(new Ray(p13, v)),
+                "case: Ray's line is on the edge's continuation");
+
+    }
+
+    @Test
+    public void testFindGeoIntersectionsHelper() {
+
+        final var exp = List.of(new Intersectable.GeoPoint(t1,gp1));
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray's line is inside the polygon(1 point)
+        //maxDistance = 1
+        final var result1 = t1.findGeoIntersectionsHelper(new Ray(p01, v),1d).stream()
+                .sorted(Comparator.comparingDouble(p -> p.point.distance(p01))).toList();
+
+        assertEquals(1, result1.size(),
+                "Wrong number of points");
+        assertEquals(exp, result1,
+                "Ray's line cross the polygon");
+
+        //TC01*: Ray's line is inside the polygon(1 point)
+        //maxDistance = 0.5
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p01, v),0.5),
+                "case: Ray's line is inside the polygon but maxDistance is smaller " +
+                        "than the distance between the ray's head and the intersection point");
+
+        // TC02: Ray's line is outside the polygon opposite the edge(0 points)
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p02, v), Double.POSITIVE_INFINITY),
+                "case: Ray's line is outside the polygon");
+
+        // TC03: Ray's line is outside the polygon against the vertex(0 points)
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p03, v), Double.POSITIVE_INFINITY),
+                "case: Ray's line is outside the polygon");
+
+        // =============== Boundary Values Tests ==================
+
+        // TC11: Ray's line is on the edge(0 points)
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p11, v), Double.POSITIVE_INFINITY),
+                "case: Ray's line is on the edge");
+
+        // TC12: Ray's line is in the vertex(0 points)
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p001, v), Double.POSITIVE_INFINITY),
+                "case: Ray's line is in the vertex");
+
+        // TC13: Ray's line is on the edge's continuation(0 points)
+        assertNull(t1.findGeoIntersectionsHelper(new Ray(p13, v), Double.POSITIVE_INFINITY),
                 "case: Ray's line is on the edge's continuation");
 
     }

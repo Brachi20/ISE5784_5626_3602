@@ -149,6 +149,8 @@ public class ReflectionRefractionTests {
               .build()
               .renderImage()
               .writeToImage();
+
+      //kuku was here
    }
 
    //      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
