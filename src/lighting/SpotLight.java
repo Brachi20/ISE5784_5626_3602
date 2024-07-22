@@ -20,7 +20,7 @@ public class SpotLight extends PointLight {
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
         this.direction = direction.normalize();
-        this.narrowness = 1; // Default value for narrowness
+        this.narrowness = 1d; // Default value for narrowness
     }
 
     @Override
