@@ -105,7 +105,11 @@ public class Cylinder extends Tube {
         }
 
         Vector vCrossVA = v.crossProduct(vAxis);
+        if(isZero(vCrossVA.lengthSquared()))
+            return null;
         Vector deltaPCrossVA = deltaP.crossProduct(vAxis);
+        if(isZero(deltaPCrossVA.lengthSquared()))
+            return null;
 
         // Calculate the solutions of the following quadratic equation and find the values of t1,t2
         double a = vCrossVA.lengthSquared(); // represents the area of the parallelogram formed by the vectors v and vAxis
