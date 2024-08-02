@@ -306,7 +306,7 @@ public class Camera implements Cloneable {
                 if (camera.vTo == null)
                     throw new MissingResourceException(MISSING_RESOURCES, NAME_OF_CLASS, "to vector");
 
-                if (camera.vUp.dotProduct(camera.vTo) != 0)
+                if (!isZero(camera.vUp.dotProduct(camera.vTo)))
                     throw new IllegalArgumentException("ERROR:up and to are not orthogonal");
 
                 camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
