@@ -20,6 +20,12 @@ import static java.awt.Color.WHITE;
  * @author Dan
  */
 public class LightsTests {
+
+    /**
+     * The level of the anti aliasing in the tests
+     */
+    private int antiAliasingLevel = 1;
+
     /**
      * Shininess value for most of the geometries in the tests
      */
@@ -209,7 +215,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereDirectional", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -224,7 +230,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSpherePoint", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -239,7 +245,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpot", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -253,7 +259,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesDirectional", 500, 500)) //
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -268,7 +274,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesPoint", 500, 500)) //
                 .build() //
-                .renderImage() //
+                .renderImage(antiAliasingLevel) //
                 .writeToImage(); //
     }
 
@@ -283,7 +289,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpot", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -296,7 +302,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("multiLightSphere", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
 
     }
@@ -312,7 +318,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("multiLightTriangles", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -329,7 +335,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpotWithNarrower", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -344,36 +350,8 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpotWithNarrower", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
-
-//   /** Produce a picture of a sphere lighted by a narrow spotlight */
-//   @Test
-//   public void sphereSpotSharp() {
-//      scene1.geometries.add(sphere);
-//      scene1.lights
-//         .add(new SpotLight(sphereLightColor, sphereLightPosition, new Vector(1, 1, -0.5))
-//            .setKl(0.001).setKq(0.00004).setNarrowBeam(10));
-//
-//      camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
-//         .build()
-//         .renderImage()
-//         .writeToImage();
-//   }
-//
-//   /** Produce a picture of two triangles lighted by a narrow spotlight */
-//   @Test
-//   public void trianglesSpotSharp() {
-//      scene2.geometries.add(triangle1, triangle2);
-//      scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
-//         .setKl(0.001).setKq(0.00004).setNarrowBeam(10));
-//
-//      camera2.setImageWriter(new ImageWriter("lightTrianglesSpotSharp", 500, 500))
-//         .build()
-//         .renderImage()
-//         .writeToImage();
-//   }
-//
 }

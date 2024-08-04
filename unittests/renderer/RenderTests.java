@@ -30,6 +30,7 @@ public class RenderTests {
             .setVpDistance(100)
             .setVpSize(500, 500);
 
+    private int antiAliasingLevel = 1;
     /**
      * Produce a scene with basic 3D model and render it into a png image with a
      * grid
@@ -50,7 +51,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("base render test", 1000, 1000))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
     }
@@ -79,7 +80,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("color render test", 1000, 1000))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .printGrid(100, new Color(WHITE))
                 .writeToImage();
     }
@@ -98,7 +99,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
     }

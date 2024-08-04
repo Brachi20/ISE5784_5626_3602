@@ -13,6 +13,9 @@ import scene.Scene;
 /** Testing basic shadows
  * @author Dan */
 public class ShadowTests {
+
+    /** The level of the anti-aliasing in the tests */
+   private int antiAliasingLevel = 1;
    /** Scene of the tests */
    private final Scene          scene      = new Scene("Test scene");
    /** Camera builder of the tests */
@@ -40,7 +43,7 @@ public class ShadowTests {
                           .setKl(1E-5).setKq(1.5E-7));
       camera.setImageWriter(new ImageWriter(pictName, 400, 400))
          .build()
-         .renderImage() //
+         .renderImage(antiAliasingLevel) //
          .writeToImage();
    }
 
@@ -105,7 +108,7 @@ public class ShadowTests {
 
       camera.setImageWriter(new ImageWriter("shadowTrianglesSphere", 600, 600))
          .build()
-         .renderImage()
+         .renderImage(antiAliasingLevel)
          .writeToImage();
    }
 

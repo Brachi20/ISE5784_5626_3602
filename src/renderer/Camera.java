@@ -5,10 +5,14 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Camera implements Cloneable {
 
@@ -59,6 +63,7 @@ public class Camera implements Cloneable {
         return distance;
     }
 
+
     public Ray constructRay(int nX, int nY, int j, int i) {
         double rX = width / nX;
         double rY = height / nY;
@@ -79,30 +84,76 @@ public class Camera implements Cloneable {
         return new Ray(p0, Vij);
     }
 
+    public List<Ray> constructRectangleOfRays(int nX, int nY, int j, int i, int size) {
+        double rX = width / nX;
+        double rY = height / nY;
+
+        double Xj = (j - (nX - 1) / 2d) * rX;
+        double Yi = -(i - (nY - 1) / 2d) * rY;
+
+        Point pCenter = p0.add(vTo.scale(distance));
+
+        Point Pij = pCenter;
+        if (!isZero(Xj))
+            Pij = Pij.add(vRight.scale(Xj));
+        if (!isZero(Yi))
+            Pij = Pij.add(vUp.scale(Yi));
+
+        List<Ray> rays = new ArrayList<>(size);
+        Random rand = new Random();
+
+        for (int k = 0; k < size; k++) {
+            // Generate random point within the pixel area
+            double offsetX = (rand.nextDouble() - 0.5) * rX; // random value between -rX/2 and rX/2
+            double offsetY = (rand.nextDouble() - 0.5) * rY; // random value between -rY/2 and rY/2
+
+            Point randomPoint = Pij.add(vRight.scale(offsetX)).add(vUp.scale(offsetY));
+            Vector rayDirection = randomPoint.subtract(p0);
+            rays.add(new Ray(p0, rayDirection));
+        }
+
+        return rays;
+    }
+
+
+
+
+
     /**
      * Renders the image.
      */
-    public Camera renderImage() {
+    public Camera renderImage(int size) {
         for (int i = 0; i < imageWriter.getNy(); i++) {
             for (int j = 0; j < imageWriter.getNx(); j++) {
-                castRay(imageWriter.getNx(), imageWriter.getNy(), j, i);
+                castRay(imageWriter.getNx(), imageWriter.getNy(), j, i,size);
             }
         }
         return this;
     }
 
     /**
-     * Casts a ray.
+     * Casts a ray from the camera through a pixel in the view plane.
      *
-     * @param nX The x coordinate
-     * @param nY The y coordinate
-     * @param i  The i coordinate
-     * @param j  The j coordinate
+     * @param nX The number of pixels in the x-axis
+     * @param nY The number of pixels in the y-axis
+     * @param j  The x-coordinate of the pixel
+     * @param i  The y-coordinate of the pixel
      */
-    private void castRay(int nX, int nY, int j, int i) {
-        Ray ray = constructRay(nX, nY, j, i);
-        imageWriter.writePixel(j, i, rayTracer.traceRay(ray));
+    private void castRay(int nX, int nY, int j, int i, int size) {
+        if(size == 1){
+            Ray ray = constructRay(nX, nY, j, i);
+            imageWriter.writePixel(j, i, rayTracer.traceRay(ray));
+        }
+        else{
+            List<Ray> rays = constructRectangleOfRays(nX, nY, j, i, size);
+            Color color = Color.BLACK;
+            for(Ray ray : rays){
+                color = color.add(rayTracer.traceRay(ray));
+            }
+            imageWriter.writePixel(j, i, color.reduce(rays.size()));
+        }
     }
+
 
     public Camera printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNy(); i++) {

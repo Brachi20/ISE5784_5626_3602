@@ -23,6 +23,9 @@ import scene.Scene;
  * (with transparency)
  * @author dzilb */
 public class ReflectionRefractionTests {
+
+    /** The level of the anti-aliasing in the tests */
+    private int antiAliasingLevel = 1;
     /**
      * Scene for the tests
      */
@@ -52,7 +55,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(150, 150)
                 .setImageWriter(new ImageWriter("refractionTwoSpheres", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -83,7 +86,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(2500, 2500)
                 .setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 500, 500))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -109,7 +112,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("refractionShadow", 600, 600))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -151,7 +154,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("reflectionFourObjectsTest", 600, 600))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
@@ -215,17 +218,11 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("sceneWithTenObjectsTest", 600, 600))
                 .build()
-                .renderImage()
+                .renderImage(antiAliasingLevel)
                 .writeToImage();
     }
 
 
-    //      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
-//
-//      scene.lights.add(
-//              new SpotLight(new Color(700, 400, 400), new Point(30, 25, 0), new Vector(0, 0, -1)) //
-//                      .setKl(4E-5).setKq(2E-7));
-////      scene.lightSourceList.add(new PointLight(new Color(160, 80, 240), new Point3D(-100, -100, 100))//
-////              .setKl(0.00000000001).setKq(0.0000000001));
+
 
 }
