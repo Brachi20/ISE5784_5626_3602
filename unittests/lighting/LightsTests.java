@@ -24,7 +24,7 @@ public class LightsTests {
     /**
      * The level of the anti aliasing in the tests
      */
-    private int antiAliasingLevel = 1;
+    private int antiAliasingLevel = 50;
 
     /**
      * Shininess value for most of the geometries in the tests

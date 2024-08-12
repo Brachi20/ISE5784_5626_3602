@@ -15,7 +15,7 @@ import scene.Scene;
 public class ShadowTests {
 
     /** The level of the anti-aliasing in the tests */
-   private int antiAliasingLevel = 1;
+   private int antiAliasingLevel = 200;
    /** Scene of the tests */
    private final Scene          scene      = new Scene("Test scene");
    /** Camera builder of the tests */

@@ -4,15 +4,15 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import renderer.PixelManager;
 
-import java.util.List;
-import java.util.MissingResourceException;
+import java.util.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.stream.*;
+
 
 public class Camera implements Cloneable {
 
@@ -26,7 +26,9 @@ public class Camera implements Cloneable {
     private double distance = 0d;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
-
+    private PixelManager pixelManager;
+    private int threadsCount = 1;
+    private boolean adaptive = false;
 
     private Camera() {
     }
@@ -84,7 +86,7 @@ public class Camera implements Cloneable {
         return new Ray(p0, Vij);
     }
 
-    public List<Ray> constructRectangleOfRays(int nX, int nY, int j, int i, int size) {
+    public List<Ray> constructRectangleOfRays(int nX, int nY, int j, int i, int numRays) {
         double rX = width / nX;
         double rY = height / nY;
 
@@ -99,10 +101,10 @@ public class Camera implements Cloneable {
         if (!isZero(Yi))
             Pij = Pij.add(vUp.scale(Yi));
 
-        List<Ray> rays = new ArrayList<>(size);
+        List<Ray> rays = new ArrayList<>(numRays);
         Random rand = new Random();
 
-        for (int k = 0; k < size; k++) {
+        for (int k = 0; k < numRays; k++) {
             // Generate random point within the pixel area
             double offsetX = (rand.nextDouble() - 0.5) * rX; // random value between -rX/2 and rX/2
             double offsetY = (rand.nextDouble() - 0.5) * rY; // random value between -rY/2 and rY/2
@@ -116,45 +118,121 @@ public class Camera implements Cloneable {
     }
 
 
-
-
-
-    /**
-     * Renders the image.
+     /* Renders the image by casting rays through each pixel.
+     * @return The camera after rendering the image.
      */
-    public Camera renderImage(int size) {
-        for (int i = 0; i < imageWriter.getNy(); i++) {
-            for (int j = 0; j < imageWriter.getNx(); j++) {
-                castRay(imageWriter.getNx(), imageWriter.getNy(), j, i,size);
+    public Camera renderImage(int numRays) {
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+        // Verify that nX and nY are not zero to avoid division by zero
+        if (nY == 0 || nX == 0)
+            throw new IllegalArgumentException("It is impossible to divide by 0");
+        // Initialize the pixel manager
+        pixelManager = new PixelManager(nY, nX, 0.1);
+        // Check if the number of threads is 0
+        if (threadsCount == 0) {
+            for (int i = 0; i < nY; ++i)
+                for (int j = 0; j < nX; ++j)
+                    castRay(nX, nY, j, i, numRays);
+        }
+        else { // see further... option 2
+            var threads = new LinkedList<Thread>(); // list of threads
+            while (threadsCount-- > 0) // add appropriate number of threads
+                threads.add(new Thread(() -> { // add a thread with its code
+                    PixelManager.Pixel pixel; // current pixel(row,col)
+                    // allocate pixel(row,col) in loop until there are no more pixels
+                    while ((pixel = pixelManager.nextPixel()) != null)
+                        // cast ray through pixel (and color it – inside castRay)
+                        castRay(nX, nY, pixel.col(), pixel.row(),numRays);
+                }));
+            // start all the threads
+            for (var thread : threads) thread.start();
+            // wait until all the threads have finished
+            try {
+                for (var thread : threads) thread.join();
+            } catch (InterruptedException ignore) {
             }
         }
         return this;
     }
 
-    /**
-     * Casts a ray from the camera through a pixel in the view plane.
-     *
-     * @param nX The number of pixels in the x-axis
-     * @param nY The number of pixels in the y-axis
-     * @param j  The x-coordinate of the pixel
-     * @param i  The y-coordinate of the pixel
+
+
+
+
+
+        /**
+     * Casts a num of rays through a pixel and writes the resulting color to the image.
+     * @param nX Number of pixels in width.
+     * @param nY Number of pixels in height.
+     * @param column The column index of the pixel.
+     * @param row The row index of the pixel.
      */
-    private void castRay(int nX, int nY, int j, int i, int size) {
-        if(size == 1){
-            Ray ray = constructRay(nX, nY, j, i);
-            imageWriter.writePixel(j, i, rayTracer.traceRay(ray));
-        }
-        else{
-            List<Ray> rays = constructRectangleOfRays(nX, nY, j, i, size);
-            Color color = Color.BLACK;
-            for(Ray ray : rays){
-                color = color.add(rayTracer.traceRay(ray));
+    private void castRay(int nX, int nY, int column, int row, int numRays) {
+        Color color = Color.BLACK;
+        if (numRays == 1) {
+            // Trace a single ray
+            Ray ray = constructRay(nX, nY, column, row);
+            color = rayTracer.traceRay(ray);
+        } else {
+            boolean colorsDifferernt = false;
+            if(adaptive){
+            // Trace multiple rays
+            List<Ray> rays = constructRectangleOfRays(nX, nY, column, row, 5);
+            if (!rays.isEmpty()) {
+                // Handle empty rays list, if applicable
+                Color firstColor = rayTracer.traceRay(rays.get(0));
+                // Check if all rays produce the same color
+                for (Ray ray : rays) {
+                    Color currentColor = rayTracer.traceRay(ray);
+                    if (!currentColor.equals(firstColor)) {
+                        colorsDifferernt = true;
+                        break;
+                    }
+                }
+                if (colorsDifferernt) {
+                     rays = constructRectangleOfRays(nX, nY, column, row, numRays);
+                     color = AvrageColor(rays, color);
+                } else {
+                    color = firstColor;
+                }
             }
-            imageWriter.writePixel(j, i, color.reduce(rays.size()));
-        }
+            } else{
+                List<Ray> rays = constructRectangleOfRays(nX, nY, column, row, numRays);
+                color= AvrageColor(rays, color);
+
+        }}
+
+        // Write the computed color to the image and mark the pixel as done
+        imageWriter.writePixel(column, row, color);
+        pixelManager.pixelDone();
     }
 
 
+
+        /**
+     * Calculates the average color from a list of rays.
+     * @param rays The list of rays to calculate the average color from.
+     * @param color The initial color to add to.
+     * @return The average color from the list of rays.
+     */
+    private Color AvrageColor(List<Ray> rays, Color color) {
+        if(rays.isEmpty())
+            return Color.BLACK;
+        for (Ray ray : rays) {
+            color = color.add(rayTracer.traceRay(ray));
+        }
+        color = color.reduce(rays.size());
+        return color;
+    }
+
+    /**
+     * Prints a grid on the image.
+     *
+     * @param interval The interval between grid lines
+     * @param color    The color of the grid lines
+     * @return The camera after printing the grid
+     */
     public Camera printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNy(); i++) {
             for (int j = 0; j < imageWriter.getNx(); j++) {
@@ -303,6 +381,29 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
+
+        /**
+         * Sets the camera's number of threads.
+         *
+         * @param threadsCount The number of threads
+         * @return The builder
+         */
+        public Builder setThreadsCount(int threadsCount) {
+            camera.threadsCount = threadsCount;
+            return this;
+        }
+
+        /**
+         * Sets the camera's adaptive flag.
+         *
+         * @param adaptive The adaptive flag
+         * @return The builder
+         */
+        public Builder setAdaptive(boolean adaptive) {
+            camera.adaptive = adaptive;
+            return this;
+        }
+
 
         /**
          * Sets the camera's look at point.

@@ -21,7 +21,7 @@ class CameraTest {
     /**
      * The level of the anti-aliasing in the tests
      */
-    private int antiAliasingLevel = 1;
+    private int antiAliasingLevel = 100;
 
     /**
      * Camera builder for the tests
