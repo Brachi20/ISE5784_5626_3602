@@ -30,6 +30,16 @@ public class Sphere extends RadialGeometry {
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         Point p0 = ray.getHead(); // the head of the ray
         Vector v = ray.getDirection(); // the direction of the ray
+
+        Vector x = this.center.subtract(p0); // the vector from the head of the ray to the center of the sphere
+        // Check if the ray head is on the sphere
+        if (alignZero(x.length() - this.radius) == 0) {
+            // If the direction of the ray is pointing outwards from the sphere
+            if (alignZero(v.dotProduct(x)) >= 0) {
+                return null; // The ray is directed outwards from the sphere
+            }
+        }
+
         if (ray.getHead().equals(this.center)) // if the head of the ray is the center of the sphere
             if(this.radius<=maxDistance)
               return List.of(new GeoPoint(this, p0.add(v.scale(this.radius)))); // return the point of intersection

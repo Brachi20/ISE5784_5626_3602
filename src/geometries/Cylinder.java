@@ -147,9 +147,9 @@ public class Cylinder extends Tube {
         double t2 = alignZero((-b + sqrtDiscriminant) / (2 * a));
         // t1 and t2 expressions that express the distances from the head point of the beam (p0) along the direction
         // of the beam (v) to the intersection points
-        if(t1<=maxDistance)
+        if(alignZero(t1-maxDistance)<=0)
           addValidIntersection(intersections, ray, t1, p1, vAxis);
-        if(t2<=maxDistance)
+        if(alignZero(t2-maxDistance)<=0)
          addValidIntersection(intersections, ray, t2, p1, vAxis);
 
         return intersections.isEmpty() ? null : intersections;
