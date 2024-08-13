@@ -28,9 +28,13 @@ public class RenderTests {
             .setRayTracer(new SimpleRayTracer(scene))
             .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setVpDistance(100)
-            .setVpSize(500, 500);
+            .setVpSize(500, 500)
+            .setThreadsCount(0)
+            .setAdaptive(false)
+            .setAntialiasingLevel(1);
 
-    private int antiAliasingLevel = 1;
+
+
     /**
      * Produce a scene with basic 3D model and render it into a png image with a
      * grid
@@ -51,7 +55,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("base render test", 1000, 1000))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
     }
@@ -80,7 +84,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("color render test", 1000, 1000))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(WHITE))
                 .writeToImage();
     }
@@ -99,7 +103,7 @@ public class RenderTests {
         camera
                 .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
     }

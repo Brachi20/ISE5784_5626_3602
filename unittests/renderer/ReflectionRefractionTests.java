@@ -24,8 +24,7 @@ import scene.Scene;
  * @author dzilb */
 public class ReflectionRefractionTests {
 
-    /** The level of the anti-aliasing in the tests */
-    private int antiAliasingLevel = 20;
+
     /**
      * Scene for the tests
      */
@@ -35,7 +34,10 @@ public class ReflectionRefractionTests {
      */
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-            .setRayTracer(new SimpleRayTracer(scene));
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setAntialiasingLevel(1)
+            .setAdaptive(true)
+            .setThreadsCount(3);
 
     /**
      * Produce a picture of a sphere lighted by a spot light
@@ -55,7 +57,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(150, 150)
                 .setImageWriter(new ImageWriter("refractionTwoSpheres", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -86,7 +88,7 @@ public class ReflectionRefractionTests {
               .setVpSize(2500, 2500)
               .setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 500, 500))
               .build()
-              .renderImage(antiAliasingLevel)
+              .renderImage()
               .writeToImage();
    }
 
@@ -112,7 +114,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("refractionShadow", 600, 600))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -154,7 +156,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("reflectionFourObjectsTest", 600, 600))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -218,7 +220,7 @@ public class ReflectionRefractionTests {
                 .setVpSize(200, 200)
                 .setImageWriter(new ImageWriter("sceneWithTenObjectsTest", 600, 600))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 

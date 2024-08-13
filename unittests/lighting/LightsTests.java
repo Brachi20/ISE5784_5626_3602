@@ -21,10 +21,7 @@ import static java.awt.Color.WHITE;
  */
 public class LightsTests {
 
-    /**
-     * The level of the anti aliasing in the tests
-     */
-    private int antiAliasingLevel = 50;
+
 
     /**
      * Shininess value for most of the geometries in the tests
@@ -215,7 +212,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereDirectional", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -230,7 +227,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSpherePoint", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -245,7 +242,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpot", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -259,7 +256,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesDirectional", 500, 500)) //
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -274,7 +271,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesPoint", 500, 500)) //
                 .build() //
-                .renderImage(antiAliasingLevel) //
+                .renderImage() //
                 .writeToImage(); //
     }
 
@@ -289,7 +286,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpot", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -302,7 +299,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("multiLightSphere", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
 
     }
@@ -318,7 +315,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("multiLightTriangles", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -335,7 +332,7 @@ public class LightsTests {
 
         camera1.setImageWriter(new ImageWriter("lightSphereSpotWithNarrower", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 
@@ -350,7 +347,7 @@ public class LightsTests {
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpotWithNarrower", 500, 500))
                 .build()
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .writeToImage();
     }
 

@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class PolygonTests {
 
-
     private final Point p000 = new Point(0, 0, 0);
     private final Point p100 = new Point(1, 0, 0);
     private final Point p010 = new Point(0, 1, 0);

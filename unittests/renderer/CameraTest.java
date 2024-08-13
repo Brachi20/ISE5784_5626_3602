@@ -18,10 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class CameraTest {
 
-    /**
-     * The level of the anti-aliasing in the tests
-     */
-    private int antiAliasingLevel = 100;
 
     /**
      * Camera builder for the tests
@@ -106,7 +102,7 @@ class CameraTest {
         cameraBuilder.setImageWriter(new ImageWriter("LookAt Test01", 1000, 1000))
                 .build()
                 .lookAt(new Point(100, 0, -1000), new Vector(0, 1, 0))
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
 
@@ -114,7 +110,7 @@ class CameraTest {
         cameraBuilder.setImageWriter(new ImageWriter("LookAt Test02", 1000, 1000))
                 .build()
                 .lookAt(new Point(-100, 0, -1000), new Vector(0, 1, 0))
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
 
@@ -122,7 +118,7 @@ class CameraTest {
         cameraBuilder.setImageWriter(new ImageWriter("LookAt Test03", 1000, 1000))
                 .build()
                 .lookAt(new Point(0, 0, -1000), new Vector(0, -1, 0))
-                .renderImage(antiAliasingLevel)
+                .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
 

@@ -14,8 +14,6 @@ import scene.Scene;
  * @author Dan */
 public class ShadowTests {
 
-    /** The level of the anti-aliasing in the tests */
-   private int antiAliasingLevel = 200;
    /** Scene of the tests */
    private final Scene          scene      = new Scene("Test scene");
    /** Camera builder of the tests */
@@ -23,7 +21,9 @@ public class ShadowTests {
       .setDirection(new Vector(0,0,-1), new Vector(0,1,0))
       .setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
       .setVpSize(200, 200)
-      .setRayTracer(new SimpleRayTracer(scene));
+      .setRayTracer(new SimpleRayTracer(scene))
+           .setAdaptive(false)
+           .setThreadsCount(0);
 
    /** The sphere in the tests */
    private final Intersectable  sphere     = new Sphere(new Point(0, 0, -200), 60d)
@@ -43,7 +43,7 @@ public class ShadowTests {
                           .setKl(1E-5).setKq(1.5E-7));
       camera.setImageWriter(new ImageWriter(pictName, 400, 400))
          .build()
-         .renderImage(antiAliasingLevel) //
+         .renderImage()//
          .writeToImage();
    }
 
@@ -108,7 +108,7 @@ public class ShadowTests {
 
       camera.setImageWriter(new ImageWriter("shadowTrianglesSphere", 600, 600))
          .build()
-         .renderImage(antiAliasingLevel)
+         .renderImage()
          .writeToImage();
    }
 

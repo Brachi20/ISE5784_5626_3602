@@ -23,14 +23,15 @@ import scene.Scene;
  */
 public class TeapotTest {
     private final ImageWriter imageWriter = new ImageWriter("teapot", 800, 800);
-    private int antiAliasingLevel = 10;
 
     private final Camera.Builder camera = Camera.getBuilder()
             .setLocation(new Point(0, 0, -1000))
             .setDirection(new Vector(0, 0, 1), new Vector(0, 1, 0))
             .setVpDistance(1000).setVpSize(200, 200) //
             .setImageWriter(imageWriter)
-            .setAdaptive(true);
+            .setAntialiasingLevel(2)
+            .setAdaptive(true)
+            .setThreadsCount(3);
 
     private final Scene scene = new Scene("Test scene");
 
@@ -1571,7 +1572,10 @@ public class TeapotTest {
         );
         scene.lights.add(new PointLight(new Color(500, 500, 500), new Point(100, 0, -100)).setKq(0.000001));
 
-        camera.setRayTracer(new SimpleRayTracer(scene)).build().renderImage(antiAliasingLevel).writeToImage();
+        camera.setRayTracer(new SimpleRayTracer(scene))
+                .build()
+                .renderImage()
+                .writeToImage();
     }
 
 }

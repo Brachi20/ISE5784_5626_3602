@@ -4,14 +4,11 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-import renderer.PixelManager;
 
 import java.util.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-
-import java.util.stream.*;
 
 
 public class Camera implements Cloneable {
@@ -26,8 +23,9 @@ public class Camera implements Cloneable {
     private double distance = 0d;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private int antialiasingLevel = 1;
     private PixelManager pixelManager;
-    private int threadsCount = 1;
+    private int threadsCount;
     private boolean adaptive = false;
 
     private Camera() {
@@ -65,7 +63,14 @@ public class Camera implements Cloneable {
         return distance;
     }
 
-
+/**
+     * Constructs a ray that passes through a pixel in the view plane.
+     * @param nX The number of pixels in the width.
+     * @param nY The number of pixels in the height.
+     * @param j The column index of the pixel.
+     * @param i The row index of the pixel.
+     * @return The ray that passes through the pixel.
+ */
     public Ray constructRay(int nX, int nY, int j, int i) {
         double rX = width / nX;
         double rY = height / nY;
@@ -86,7 +91,17 @@ public class Camera implements Cloneable {
         return new Ray(p0, Vij);
     }
 
-    public List<Ray> constructRectangleOfRays(int nX, int nY, int j, int i, int numRays) {
+
+    /**
+     * Constructs a list of rays that form a rectangle in the view plane.
+     * @param nX The number of pixels in the width.
+     * @param nY The number of pixels in the height.
+     * @param j The column index of the pixel.
+     * @param i The row index of the pixel.
+     * @param numRays The number of rays to construct.
+     * @return The list of rays that form the rectangle.
+     */
+    public List<Ray> constructRays(int nX, int nY, int j, int i, int numRays) {
         double rX = width / nX;
         double rY = height / nY;
 
@@ -121,7 +136,7 @@ public class Camera implements Cloneable {
      /* Renders the image by casting rays through each pixel.
      * @return The camera after rendering the image.
      */
-    public Camera renderImage(int numRays) {
+    public Camera renderImage() {
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
         // Verify that nX and nY are not zero to avoid division by zero
@@ -133,7 +148,7 @@ public class Camera implements Cloneable {
         if (threadsCount == 0) {
             for (int i = 0; i < nY; ++i)
                 for (int j = 0; j < nX; ++j)
-                    castRay(nX, nY, j, i, numRays);
+                    castRay(nX, nY, j, i, antialiasingLevel);
         }
         else { // see further... option 2
             var threads = new LinkedList<Thread>(); // list of threads
@@ -143,7 +158,7 @@ public class Camera implements Cloneable {
                     // allocate pixel(row,col) in loop until there are no more pixels
                     while ((pixel = pixelManager.nextPixel()) != null)
                         // cast ray through pixel (and color it – inside castRay)
-                        castRay(nX, nY, pixel.col(), pixel.row(),numRays);
+                        castRay(nX, nY, pixel.col(), pixel.row(),antialiasingLevel);
                 }));
             // start all the threads
             for (var thread : threads) thread.start();
@@ -178,7 +193,7 @@ public class Camera implements Cloneable {
             boolean colorsDifferernt = false;
             if(adaptive){
             // Trace multiple rays
-            List<Ray> rays = constructRectangleOfRays(nX, nY, column, row, 5);
+            List<Ray> rays = constructRays(nX, nY, column, row, 5);
             if (!rays.isEmpty()) {
                 // Handle empty rays list, if applicable
                 Color firstColor = rayTracer.traceRay(rays.get(0));
@@ -191,14 +206,15 @@ public class Camera implements Cloneable {
                     }
                 }
                 if (colorsDifferernt) {
-                     rays = constructRectangleOfRays(nX, nY, column, row, numRays);
+                    // If the colors are different, construct more rays
+                     rays = constructRays(nX, nY, column, row, numRays);
                      color = AvrageColor(rays, color);
                 } else {
                     color = firstColor;
                 }
             }
             } else{
-                List<Ray> rays = constructRectangleOfRays(nX, nY, column, row, numRays);
+                List<Ray> rays = constructRays(nX, nY, column, row, numRays);
                 color= AvrageColor(rays, color);
 
         }}
@@ -390,6 +406,17 @@ public class Camera implements Cloneable {
          */
         public Builder setThreadsCount(int threadsCount) {
             camera.threadsCount = threadsCount;
+            return this;
+        }
+
+        /**
+         * Sets the camera's antialiasing level.
+         *
+         * @param antialiasingLevel The antialiasing level
+         * @return The builder
+         */
+        public Builder setAntialiasingLevel(int antialiasingLevel) {
+            camera.antialiasingLevel = antialiasingLevel;
             return this;
         }
 
